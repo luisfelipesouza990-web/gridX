@@ -1,769 +1,986 @@
 ```javascript
-/* =========================================================
+/* ============================================================
    GRID-X CONTROL
-   GitHub Pages + Supabase
-   ACESSO DIRETO — SEM E-MAIL E SEM SENHA
-========================================================= */
+   app.js
+   Plataforma de Energia, IA, Sustentabilidade e Inovação
+   ============================================================ */
 
 
-/* =========================================================
-   CONFIGURAÇÃO DO SUPABASE
-========================================================= */
+/* ============================================================
+   CONFIGURAÇÃO SUPABASE
+   ============================================================ */
 
-const SUPABASE_URL =
-    "https://fshnewxgiskenkkgfbnv.supabase.co";
+const SUPABASE_URL = "https://fshnewxgiskenkkgfbnv.supabase.co";
 
-const SUPABASE_PUBLISHABLE_KEY =
-    "sb_publishable_Uy4h5ag9SKPOUwhY4yS6dQ_1EpsrnZ1";
+/*
+   IMPORTANTE:
+   Coloque aqui a ANON KEY / Publishable Key do seu projeto.
+
+   Nunca coloque a service_role key neste arquivo.
+*/
+
+const SUPABASE_ANON_KEY = "COLE_AQUI_SUA_ANON_KEY";
 
 
-/* =========================================================
+let supabaseClient = null;
+
+
+/* ============================================================
    INICIALIZAÇÃO
-========================================================= */
+   ============================================================ */
 
-const { createClient } = window.supabase;
+document.addEventListener("DOMContentLoaded", () => {
 
-const supabaseClient = createClient(
-    SUPABASE_URL,
-    SUPABASE_PUBLISHABLE_KEY
-);
+    inicializarSupabase();
 
+    inicializarNavegacao();
 
-/* =========================================================
-   ELEMENTOS
-========================================================= */
+    inicializarMenuMobile();
 
-const loginScreen =
-    document.getElementById("loginScreen");
+    carregarDados();
 
-const appScreen =
-    document.getElementById("appScreen");
-
-const connectionDot =
-    document.getElementById("connectionDot");
-
-const connectionText =
-    document.getElementById("connectionText");
-
-const mobileMenuButton =
-    document.getElementById("mobileMenuButton");
-
-const sidebar =
-    document.getElementById("sidebar");
+});
 
 
-/* =========================================================
-   USUÁRIO PADRÃO
-   Não utiliza autenticação do Supabase
-========================================================= */
+/* ============================================================
+   SUPABASE
+   ============================================================ */
 
-const defaultUser = {
-
-    id: "grid-x-local",
-
-    email: "Acesso direto",
-
-    user_metadata: {
-
-        full_name: "Operador GRID-X"
-
-    }
-
-};
-
-
-/* =========================================================
-   FUNÇÕES AUXILIARES
-========================================================= */
-
-function getInitial(name, email) {
-
-    const value =
-        name ||
-        email ||
-        "G";
-
-    return value
-        .trim()
-        .charAt(0)
-        .toUpperCase();
-}
-
-
-function getUserName(user) {
-
-    if (!user) {
-
-        return "Operador GRID-X";
-
-    }
-
-    return (
-        user.user_metadata?.full_name ||
-        user.user_metadata?.name ||
-        user.email?.split("@")[0] ||
-        "Operador GRID-X"
-    );
-}
-
-
-/* =========================================================
-   STATUS DA CONEXÃO COM SUPABASE
-========================================================= */
-
-async function checkSupabaseConnection() {
+function inicializarSupabase() {
 
     try {
 
-        /*
-           Não usamos mais auth.getSession().
-           Apenas verificamos se o cliente Supabase
-           está disponível.
-        */
+        if (
+            typeof window.supabase === "undefined"
+        ) {
 
-        if (!supabaseClient) {
-
-            throw new Error(
-                "Cliente Supabase não inicializado."
+            console.warn(
+                "Biblioteca Supabase não encontrada."
             );
+
+            atualizarStatusSupabase(false);
+
+            return;
 
         }
 
 
-        connectionDot.classList.remove(
-            "offline"
+        if (
+            !SUPABASE_URL ||
+            !SUPABASE_ANON_KEY ||
+            SUPABASE_ANON_KEY === "COLE_AQUI_SUA_ANON_KEY"
+        ) {
+
+            console.warn(
+                "Configure a SUPABASE_ANON_KEY no app.js."
+            );
+
+            atualizarStatusSupabase(false);
+
+            return;
+
+        }
+
+
+        supabaseClient = window.supabase.createClient(
+            SUPABASE_URL,
+            SUPABASE_ANON_KEY
         );
 
-        connectionDot.classList.add(
-            "online"
+
+        atualizarStatusSupabase(true);
+
+
+        console.log(
+            "GRID-X CONTROL conectado ao Supabase."
         );
-
-
-        connectionText.textContent =
-            "Supabase conectado";
-
-
-        return true;
 
 
     } catch (error) {
 
         console.error(
-            "Erro na conexão Supabase:",
+            "Erro ao inicializar Supabase:",
             error
         );
 
-
-        connectionDot.classList.remove(
-            "online"
-        );
-
-        connectionDot.classList.add(
-            "offline"
-        );
-
-
-        connectionText.textContent =
-            "Erro na conexão";
-
-
-        return false;
-    }
-}
-
-
-/* =========================================================
-   MOSTRAR APLICAÇÃO
-========================================================= */
-
-async function showApp(user) {
-
-    /*
-       Esconde a tela de login, caso ela exista
-       no HTML antigo.
-    */
-
-    if (loginScreen) {
-
-        loginScreen.classList.add(
-            "hidden"
-        );
+        atualizarStatusSupabase(false);
 
     }
-
-
-    if (appScreen) {
-
-        appScreen.classList.remove(
-            "hidden"
-        );
-
-    }
-
-
-    updateUserInterface(user);
-
-
-    await checkSupabaseConnection();
-
-
-    await loadDashboard();
 
 }
 
 
-/* =========================================================
-   ATUALIZAR INTERFACE DO USUÁRIO
-========================================================= */
+/* ============================================================
+   NAVEGAÇÃO
+   ============================================================ */
 
-function updateUserInterface(user) {
+function inicializarNavegacao() {
 
-    if (!user) {
+    const menuItems = document.querySelectorAll(
+        ".menu-item"
+    );
+
+
+    menuItems.forEach(item => {
+
+        item.addEventListener(
+            "click",
+            () => {
+
+                const sectionName =
+                    item.dataset.section;
+
+                abrirSecao(sectionName);
+
+            }
+        );
+
+    });
+
+}
+
+
+/* ============================================================
+   ABRIR SEÇÃO
+   ============================================================ */
+
+function abrirSecao(sectionName) {
+
+    const sections = document.querySelectorAll(
+        ".page-section"
+    );
+
+
+    sections.forEach(section => {
+
+        section.classList.remove(
+            "active-section"
+        );
+
+    });
+
+
+    const menuItems = document.querySelectorAll(
+        ".menu-item"
+    );
+
+
+    menuItems.forEach(item => {
+
+        item.classList.remove(
+            "active"
+        );
+
+    });
+
+
+    const targetSection =
+        document.getElementById(
+            `${sectionName}Section`
+        );
+
+
+    if (!targetSection) {
+
+        console.warn(
+            `Seção não encontrada: ${sectionName}`
+        );
 
         return;
 
     }
 
 
-    const name =
-        getUserName(user);
+    targetSection.classList.add(
+        "active-section"
+    );
 
 
-    const email =
-        user.email || "Acesso direto";
-
-
-    const initial =
-        getInitial(
-            name,
-            email
+    const activeMenu =
+        document.querySelector(
+            `.menu-item[data-section="${sectionName}"]`
         );
 
 
-    const userName =
-        document.getElementById(
-            "userName"
+    if (activeMenu) {
+
+        activeMenu.classList.add(
+            "active"
         );
-
-
-    const userEmail =
-        document.getElementById(
-            "userEmail"
-        );
-
-
-    const userAvatar =
-        document.getElementById(
-            "userAvatar"
-        );
-
-
-    const profileName =
-        document.getElementById(
-            "profileName"
-        );
-
-
-    const profileEmail =
-        document.getElementById(
-            "profileEmail"
-        );
-
-
-    const profileId =
-        document.getElementById(
-            "profileId"
-        );
-
-
-    const profileAvatar =
-        document.getElementById(
-            "profileAvatar"
-        );
-
-
-    if (userName) {
-
-        userName.textContent =
-            name;
 
     }
 
 
-    if (userEmail) {
-
-        userEmail.textContent =
-            email;
-
-    }
+    atualizarCabecalho(
+        sectionName
+    );
 
 
-    if (userAvatar) {
-
-        userAvatar.textContent =
-            initial;
-
-    }
-
-
-    if (profileName) {
-
-        profileName.textContent =
-            name;
-
-    }
-
-
-    if (profileEmail) {
-
-        profileEmail.textContent =
-            email;
-
-    }
-
-
-    if (profileId) {
-
-        profileId.textContent =
-            user.id;
-
-    }
-
-
-    if (profileAvatar) {
-
-        profileAvatar.textContent =
-            initial;
-
-    }
+    fecharMenuMobile();
 
 }
 
 
-/* =========================================================
-   MENU
-========================================================= */
+/* ============================================================
+   TÍTULOS DAS SEÇÕES
+   ============================================================ */
 
-const menuItems =
-    document.querySelectorAll(
-        ".menu-item"
-    );
-
-
-const sections = {
+const sectionInfo = {
 
     dashboard: {
 
-        element:
-            "dashboardSection",
-
-        title:
-            "Dashboard",
+        title: "Dashboard",
 
         subtitle:
-            "Visão geral do sistema"
+            "Visão geral do ecossistema GRID-X"
 
     },
 
 
-    motores: {
+    ai: {
 
-        element:
-            "motoresSection",
-
-        title:
-            "Motores",
+        title: "GRID-X AI",
 
         subtitle:
-            "Equipamentos e ativos"
+            "Inteligência artificial e análise energética"
 
     },
 
 
-    ordens: {
+    energia: {
 
-        element:
-            "ordensSection",
-
-        title:
-            "Ordens de Serviço",
+        title: "Energia",
 
         subtitle:
-            "Controle da manutenção"
+            "Monitoramento da geração, consumo e eficiência"
 
     },
 
 
-    checklists: {
+    ativos: {
 
-        element:
-            "checklistsSection",
-
-        title:
-            "Checklists",
+        title: "Ativos Energéticos",
 
         subtitle:
-            "Inspeções e rotinas"
+            "Gestão dos ativos do ecossistema GRID-X"
+
+    },
+
+
+    mercado: {
+
+        title: "Mercado de Energia",
+
+        subtitle:
+            "Gestão e visualização do mercado digital de energia"
+
+    },
+
+
+    v2g: {
+
+        title: "V2G",
+
+        subtitle:
+            "Integração entre veículos elétricos e rede"
+
+    },
+
+
+    sustentabilidade: {
+
+        title: "Sustentabilidade",
+
+        subtitle:
+            "Indicadores ambientais, sociais e de governança"
+
+    },
+
+
+    projetos: {
+
+        title: "Projetos & Inovação",
+
+        subtitle:
+            "Pesquisa, desenvolvimento e novas tecnologias"
+
+    },
+
+
+    relatorios: {
+
+        title: "Relatórios",
+
+        subtitle:
+            "Indicadores e informações estratégicas"
 
     },
 
 
     usuarios: {
 
-        element:
-            "usuariosSection",
-
-        title:
-            "Usuários",
+        title: "Usuários",
 
         subtitle:
-            "Controle de acesso"
+            "Gerenciamento dos usuários da plataforma"
 
     },
 
 
     perfil: {
 
-        element:
-            "perfilSection",
-
-        title:
-            "Meu Perfil",
+        title: "Meu Perfil",
 
         subtitle:
-            "Informações da conta"
+            "Informações do acesso à plataforma"
 
     }
 
 };
 
 
-/* =========================================================
-   CLIQUES DO MENU
-========================================================= */
+/* ============================================================
+   ATUALIZAR CABEÇALHO
+   ============================================================ */
 
-menuItems.forEach(
+function atualizarCabecalho(
+    sectionName
+) {
 
-    function (button) {
-
-        button.addEventListener(
-
-            "click",
-
-            function () {
-
-                const section =
-                    button.dataset.section;
-
-
-                openSection(
-                    section
-                );
-
-
-                if (sidebar) {
-
-                    sidebar.classList.remove(
-                        "mobile-open"
-                    );
-
-                }
-
-            }
-
+    const titleElement =
+        document.getElementById(
+            "pageTitle"
         );
 
-    }
 
-);
-
-
-/* =========================================================
-   ABRIR SEÇÃO
-========================================================= */
-
-function openSection(sectionName) {
-
-    const section =
-        sections[sectionName];
+    const subtitleElement =
+        document.getElementById(
+            "pageSubtitle"
+        );
 
 
-    if (!section) {
+    const info =
+        sectionInfo[sectionName];
+
+
+    if (!info) {
 
         return;
 
     }
 
 
-    document
-        .querySelectorAll(
-            ".page-section"
-        )
-        .forEach(
+    if (titleElement) {
 
-            function (element) {
-
-                element.classList.remove(
-                    "active-section"
-                );
-
-            }
-
-        );
-
-
-    const sectionElement =
-        document.getElementById(
-            section.element
-        );
-
-
-    if (sectionElement) {
-
-        sectionElement.classList.add(
-            "active-section"
-        );
+        titleElement.textContent =
+            info.title;
 
     }
 
 
-    menuItems.forEach(
+    if (subtitleElement) {
 
-        function (item) {
+        subtitleElement.textContent =
+            info.subtitle;
 
-            item.classList.toggle(
+    }
 
-                "active",
+}
 
-                item.dataset.section ===
-                sectionName
 
+/* ============================================================
+   MENU MOBILE
+   ============================================================ */
+
+function inicializarMenuMobile() {
+
+    const button =
+        document.getElementById(
+            "mobileMenuButton"
+        );
+
+
+    const sidebar =
+        document.getElementById(
+            "sidebar"
+        );
+
+
+    if (!button || !sidebar) {
+
+        return;
+
+    }
+
+
+    button.addEventListener(
+        "click",
+        () => {
+
+            sidebar.classList.toggle(
+                "mobile-open"
             );
 
         }
-
-    );
-
-
-    const pageTitle =
-        document.getElementById(
-            "pageTitle"
-        );
-
-
-    const pageSubtitle =
-        document.getElementById(
-            "pageSubtitle"
-        );
-
-
-    if (pageTitle) {
-
-        pageTitle.textContent =
-            section.title;
-
-    }
-
-
-    if (pageSubtitle) {
-
-        pageSubtitle.textContent =
-            section.subtitle;
-
-    }
-
-}
-
-
-/* =========================================================
-   MENU MOBILE
-========================================================= */
-
-if (mobileMenuButton) {
-
-    mobileMenuButton.addEventListener(
-
-        "click",
-
-        function () {
-
-            if (sidebar) {
-
-                sidebar.classList.toggle(
-                    "mobile-open"
-                );
-
-            }
-
-        }
-
     );
 
 }
 
 
-/* =========================================================
-   DASHBOARD
-========================================================= */
+/* ============================================================
+   FECHAR MENU MOBILE
+   ============================================================ */
 
-async function loadDashboard() {
+function fecharMenuMobile() {
 
-    /*
-       Mantido conforme a estrutura original.
-       As consultas ao banco serão adicionadas
-       quando as tabelas do GRID-X estiverem prontas.
-    */
-
-
-    const motorCount =
+    const sidebar =
         document.getElementById(
-            "motorCount"
+            "sidebar"
         );
 
 
-    const osCount =
-        document.getElementById(
-            "osCount"
-        );
+    if (!sidebar) {
+
+        return;
+
+    }
 
 
-    const checklistCount =
-        document.getElementById(
-            "checklistCount"
-        );
+    sidebar.classList.remove(
+        "mobile-open"
+    );
+
+}
 
 
-    const profileStatus =
-        document.getElementById(
-            "profileStatus"
-        );
+/* ============================================================
+   STATUS SUPABASE
+   ============================================================ */
 
+function atualizarStatusSupabase(
+    conectado
+) {
 
-    const supabaseStatus =
+    const element =
         document.getElementById(
             "supabaseStatus"
         );
 
 
-    const authStatus =
-        document.getElementById(
-            "authStatus"
+    if (!element) {
+
+        return;
+
+    }
+
+
+    if (conectado) {
+
+        element.textContent =
+            "Conectado";
+
+        element.classList.remove(
+            "status-error"
+        );
+
+        element.classList.add(
+            "status-ok"
+        );
+
+    } else {
+
+        element.textContent =
+            "Não configurado";
+
+        element.classList.remove(
+            "status-ok"
+        );
+
+        element.classList.add(
+            "status-error"
+        );
+
+    }
+
+}
+
+
+/* ============================================================
+   CARREGAR DADOS
+   ============================================================ */
+
+async function carregarDados() {
+
+    if (!supabaseClient) {
+
+        console.log(
+            "Supabase ainda não configurado."
+        );
+
+        return;
+
+    }
+
+
+    await carregarAtivos();
+
+    await carregarPredicoes();
+
+    await carregarDadosEnergia();
+
+    await carregarV2G();
+
+    await carregarSustentabilidade();
+
+}
+
+
+/* ============================================================
+   ATIVOS ENERGÉTICOS
+   ============================================================ */
+
+async function carregarAtivos() {
+
+    try {
+
+        const {
+            data,
+            error
+        } = await supabaseClient
+            .from("ativos_energeticos")
+            .select("*");
+
+
+        if (error) {
+
+            console.warn(
+                "Tabela ativos_energeticos:",
+                error.message
+            );
+
+            return;
+
+        }
+
+
+        const quantidade =
+            data?.length || 0;
+
+
+        console.log(
+            "Ativos encontrados:",
+            quantidade
         );
 
 
-    const sessionStatus =
+    } catch (error) {
+
+        console.error(
+            "Erro ao carregar ativos:",
+            error
+        );
+
+    }
+
+}
+
+
+/* ============================================================
+   GRID-X AI
+   ============================================================ */
+
+async function carregarPredicoes() {
+
+    try {
+
+        const {
+            data,
+            error
+        } = await supabaseClient
+            .from("ai_predictions")
+            .select("*");
+
+
+        if (error) {
+
+            console.warn(
+                "Tabela ai_predictions:",
+                error.message
+            );
+
+            return;
+
+        }
+
+
+        const total =
+            data?.length || 0;
+
+
+        atualizarTexto(
+            "predictionCount",
+            total
+        );
+
+
+        const anomalias =
+            data
+                ? data.filter(
+                    item =>
+                        item.type === "anomaly" ||
+                        item.prediction_type === "anomaly"
+                ).length
+                : 0;
+
+
+        atualizarTexto(
+            "anomalyCount",
+            anomalias
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "Erro ao carregar IA:",
+            error
+        );
+
+    }
+
+}
+
+
+/* ============================================================
+   DADOS DE ENERGIA
+   ============================================================ */
+
+async function carregarDadosEnergia() {
+
+    try {
+
+        /*
+           Esta função tenta utilizar a tabela
+           "geracao_energia".
+
+           Se a tabela ainda não existir,
+           o sistema simplesmente mantém os
+           indicadores em zero.
+        */
+
+
+        const {
+            data,
+            error
+        } = await supabaseClient
+            .from("geracao_energia")
+            .select("*");
+
+
+        if (error) {
+
+            console.warn(
+                "Tabela geracao_energia:",
+                error.message
+            );
+
+            return;
+
+        }
+
+
+        if (!data || data.length === 0) {
+
+            return;
+
+        }
+
+
+        let totalGerado = 0;
+
+
+        data.forEach(item => {
+
+            const valor =
+                Number(
+                    item.energy_kwh ??
+                    item.energia_kwh ??
+                    item.generation_kwh ??
+                    item.valor ??
+                    0
+                );
+
+
+            if (!Number.isNaN(valor)) {
+
+                totalGerado += valor;
+
+            }
+
+        });
+
+
+        const valorFormatado =
+            formatarNumero(
+                totalGerado
+            );
+
+
+        atualizarTexto(
+            "energyGenerated",
+            `${valorFormatado} kWh`
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "Erro ao carregar energia:",
+            error
+        );
+
+    }
+
+}
+
+
+/* ============================================================
+   V2G
+   ============================================================ */
+
+async function carregarV2G() {
+
+    try {
+
+        const {
+            data,
+            error
+        } = await supabaseClient
+            .from("v2g")
+            .select("*");
+
+
+        if (error) {
+
+            console.warn(
+                "Tabela v2g:",
+                error.message
+            );
+
+            return;
+
+        }
+
+
+        const quantidade =
+            data?.length || 0;
+
+
+        console.log(
+            "Registros V2G:",
+            quantidade
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "Erro ao carregar V2G:",
+            error
+        );
+
+    }
+
+}
+
+
+/* ============================================================
+   SUSTENTABILIDADE
+   ============================================================ */
+
+async function carregarSustentabilidade() {
+
+    try {
+
+        const {
+            data,
+            error
+        } = await supabaseClient
+            .from("indicadores_esg")
+            .select("*");
+
+
+        if (error) {
+
+            console.warn(
+                "Tabela indicadores_esg:",
+                error.message
+            );
+
+            return;
+
+        }
+
+
+        if (!data || data.length === 0) {
+
+            return;
+
+        }
+
+
+        let co2Total = 0;
+
+
+        data.forEach(item => {
+
+            const valor =
+                Number(
+                    item.co2_avoided ??
+                    item.co2_evitado ??
+                    item.valor_co2 ??
+                    0
+                );
+
+
+            if (!Number.isNaN(valor)) {
+
+                co2Total += valor;
+
+            }
+
+        });
+
+
+        atualizarTexto(
+            "co2Avoided",
+            `${formatarNumero(co2Total)} kg`
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "Erro ao carregar sustentabilidade:",
+            error
+        );
+
+    }
+
+}
+
+
+/* ============================================================
+   FUNÇÃO AUXILIAR — ATUALIZAR TEXTO
+   ============================================================ */
+
+function atualizarTexto(
+    id,
+    valor
+) {
+
+    const element =
+        document.getElementById(id);
+
+
+    if (!element) {
+
+        return;
+
+    }
+
+
+    element.textContent =
+        valor;
+
+}
+
+
+/* ============================================================
+   FORMATAÇÃO DE NÚMEROS
+   ============================================================ */
+
+function formatarNumero(
+    numero
+) {
+
+    return Number(
+        numero || 0
+    ).toLocaleString(
+        "pt-BR",
+        {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 2
+        }
+    );
+
+}
+
+
+/* ============================================================
+   SISTEMA ONLINE
+   ============================================================ */
+
+function atualizarSistemaOnline() {
+
+    const status =
         document.getElementById(
             "sessionStatus"
         );
 
 
-    if (motorCount) {
+    if (!status) {
 
-        motorCount.textContent =
-            "0";
-
-    }
-
-
-    if (osCount) {
-
-        osCount.textContent =
-            "0";
+        return;
 
     }
 
 
-    if (checklistCount) {
-
-        checklistCount.textContent =
-            "0";
-
-    }
-
-
-    if (profileStatus) {
-
-        profileStatus.textContent =
-            "Ativo";
-
-    }
-
-
-    if (supabaseStatus) {
-
-        supabaseStatus.textContent =
-            "Conectado";
-
-    }
-
-
-    if (authStatus) {
-
-        authStatus.textContent =
-            "Acesso direto";
-
-    }
-
-
-    if (sessionStatus) {
-
-        sessionStatus.textContent =
-            "Ativa";
-
-    }
+    status.textContent =
+        "Ativo";
 
 }
 
 
-/* =========================================================
-   INICIALIZAÇÃO DA APLICAÇÃO
-========================================================= */
+/* ============================================================
+   RELÓGIO / ATUALIZAÇÃO PERIÓDICA
+   ============================================================ */
 
-async function initializeApplication() {
+setInterval(
+    () => {
 
-    console.log(
-        "Inicializando GRID-X CONTROL..."
-    );
+        atualizarSistemaOnline();
 
-
-    /*
-       Não verifica mais:
-       - e-mail
-       - senha
-       - sessão
-       - usuário autenticado
-    */
-
-
-    await showApp(
-        defaultUser
-    );
-
-
-    /*
-       Abre o Dashboard automaticamente.
-    */
-
-    openSection(
-        "dashboard"
-    );
-
-}
-
-
-/* =========================================================
-   INICIAR SISTEMA
-========================================================= */
-
-document.addEventListener(
-
-    "DOMContentLoaded",
-
-    function () {
-
-        initializeApplication();
-
-    }
-
+    },
+    30000
 );
+
+
+/* ============================================================
+   API GLOBAL
+   Permite que outros arquivos utilizem funções do sistema.
+   ============================================================ */
+
+window.GRIDX = {
+
+    abrirSecao,
+
+    carregarDados,
+
+    carregarAtivos,
+
+    carregarPredicoes,
+
+    carregarDadosEnergia,
+
+    carregarV2G,
+
+    carregarSustentabilidade
+
+};
+
+
+/* ============================================================
+   FIM DO APP.JS
+   ============================================================ */
 ```
