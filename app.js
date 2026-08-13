@@ -1,6 +1,8 @@
+```javascript
 /* =========================================================
    GRID-X CONTROL
    GitHub Pages + Supabase
+   ACESSO DIRETO — SEM E-MAIL E SEM SENHA
 ========================================================= */
 
 
@@ -37,33 +39,6 @@ const loginScreen =
 const appScreen =
     document.getElementById("appScreen");
 
-const loginForm =
-    document.getElementById("loginForm");
-
-const loginMessage =
-    document.getElementById("loginMessage");
-
-const logoutButton =
-    document.getElementById("logoutButton");
-
-const forgotPassword =
-    document.getElementById("forgotPassword");
-
-const passwordModal =
-    document.getElementById("passwordModal");
-
-const closeModal =
-    document.getElementById("closeModal");
-
-const sendRecovery =
-    document.getElementById("sendRecovery");
-
-const recoveryEmail =
-    document.getElementById("recoveryEmail");
-
-const recoveryMessage =
-    document.getElementById("recoveryMessage");
-
 const connectionDot =
     document.getElementById("connectionDot");
 
@@ -78,33 +53,35 @@ const sidebar =
 
 
 /* =========================================================
-   FUNÇÕES AUXILIARES
+   USUÁRIO PADRÃO
+   Não utiliza autenticação do Supabase
 ========================================================= */
 
-function showLoginMessage(message, type = "error") {
+const defaultUser = {
 
-    loginMessage.textContent = message;
+    id: "grid-x-local",
 
-    loginMessage.className =
-        "message " + type;
-}
+    email: "Acesso direto",
+
+    user_metadata: {
+
+        full_name: "Operador GRID-X"
+
+    }
+
+};
 
 
-function showRecoveryMessage(message, type = "error") {
-
-    recoveryMessage.textContent = message;
-
-    recoveryMessage.className =
-        "message " + type;
-}
-
+/* =========================================================
+   FUNÇÕES AUXILIARES
+========================================================= */
 
 function getInitial(name, email) {
 
     const value =
         name ||
         email ||
-        "U";
+        "G";
 
     return value
         .trim()
@@ -116,41 +93,58 @@ function getInitial(name, email) {
 function getUserName(user) {
 
     if (!user) {
-        return "Usuário";
+
+        return "Operador GRID-X";
+
     }
 
     return (
         user.user_metadata?.full_name ||
         user.user_metadata?.name ||
         user.email?.split("@")[0] ||
-        "Usuário"
+        "Operador GRID-X"
     );
 }
 
 
 /* =========================================================
-   STATUS DA CONEXÃO
+   STATUS DA CONEXÃO COM SUPABASE
 ========================================================= */
 
 async function checkSupabaseConnection() {
 
     try {
 
-        const {
-            data,
-            error
-        } = await supabaseClient.auth.getSession();
+        /*
+           Não usamos mais auth.getSession().
+           Apenas verificamos se o cliente Supabase
+           está disponível.
+        */
 
-        if (error) {
-            throw error;
+        if (!supabaseClient) {
+
+            throw new Error(
+                "Cliente Supabase não inicializado."
+            );
+
         }
 
-        connectionDot.classList.add("online");
+
+        connectionDot.classList.remove(
+            "offline"
+        );
+
+        connectionDot.classList.add(
+            "online"
+        );
+
 
         connectionText.textContent =
             "Supabase conectado";
 
+
         return true;
+
 
     } catch (error) {
 
@@ -159,11 +153,19 @@ async function checkSupabaseConnection() {
             error
         );
 
-        connectionDot.classList.remove("online");
-        connectionDot.classList.add("offline");
+
+        connectionDot.classList.remove(
+            "online"
+        );
+
+        connectionDot.classList.add(
+            "offline"
+        );
+
 
         connectionText.textContent =
             "Erro na conexão";
+
 
         return false;
     }
@@ -176,33 +178,37 @@ async function checkSupabaseConnection() {
 
 async function showApp(user) {
 
-    loginScreen.classList.add("hidden");
+    /*
+       Esconde a tela de login, caso ela exista
+       no HTML antigo.
+    */
 
-    appScreen.classList.remove("hidden");
+    if (loginScreen) {
+
+        loginScreen.classList.add(
+            "hidden"
+        );
+
+    }
+
+
+    if (appScreen) {
+
+        appScreen.classList.remove(
+            "hidden"
+        );
+
+    }
+
 
     updateUserInterface(user);
 
+
     await checkSupabaseConnection();
 
+
     await loadDashboard();
-}
 
-
-/* =========================================================
-   MOSTRAR LOGIN
-========================================================= */
-
-function showLogin() {
-
-    appScreen.classList.add("hidden");
-
-    loginScreen.classList.remove("hidden");
-
-    loginForm.reset();
-
-    loginMessage.textContent = "";
-
-    loginMessage.className = "message";
 }
 
 
@@ -213,345 +219,125 @@ function showLogin() {
 function updateUserInterface(user) {
 
     if (!user) {
+
         return;
+
     }
+
 
     const name =
         getUserName(user);
 
+
     const email =
-        user.email || "—";
+        user.email || "Acesso direto";
+
 
     const initial =
-        getInitial(name, email);
+        getInitial(
+            name,
+            email
+        );
 
 
-    document.getElementById(
-        "userName"
-    ).textContent = name;
+    const userName =
+        document.getElementById(
+            "userName"
+        );
 
 
-    document.getElementById(
-        "userEmail"
-    ).textContent = email;
+    const userEmail =
+        document.getElementById(
+            "userEmail"
+        );
 
 
-    document.getElementById(
-        "userAvatar"
-    ).textContent = initial;
+    const userAvatar =
+        document.getElementById(
+            "userAvatar"
+        );
 
 
-    document.getElementById(
-        "profileName"
-    ).textContent = name;
+    const profileName =
+        document.getElementById(
+            "profileName"
+        );
 
 
-    document.getElementById(
-        "profileEmail"
-    ).textContent = email;
+    const profileEmail =
+        document.getElementById(
+            "profileEmail"
+        );
 
 
-    document.getElementById(
-        "profileId"
-    ).textContent = user.id;
+    const profileId =
+        document.getElementById(
+            "profileId"
+        );
 
 
-    document.getElementById(
-        "profileAvatar"
-    ).textContent = initial;
+    const profileAvatar =
+        document.getElementById(
+            "profileAvatar"
+        );
+
+
+    if (userName) {
+
+        userName.textContent =
+            name;
+
+    }
+
+
+    if (userEmail) {
+
+        userEmail.textContent =
+            email;
+
+    }
+
+
+    if (userAvatar) {
+
+        userAvatar.textContent =
+            initial;
+
+    }
+
+
+    if (profileName) {
+
+        profileName.textContent =
+            name;
+
+    }
+
+
+    if (profileEmail) {
+
+        profileEmail.textContent =
+            email;
+
+    }
+
+
+    if (profileId) {
+
+        profileId.textContent =
+            user.id;
+
+    }
+
+
+    if (profileAvatar) {
+
+        profileAvatar.textContent =
+            initial;
+
+    }
+
 }
-
-
-/* =========================================================
-   LOGIN
-========================================================= */
-
-loginForm.addEventListener(
-    "submit",
-    async function (event) {
-
-        event.preventDefault();
-
-        const email =
-            document.getElementById(
-                "email"
-            ).value.trim();
-
-        const password =
-            document.getElementById(
-                "password"
-            ).value;
-
-
-        const button =
-            loginForm.querySelector(
-                ".btn-primary"
-            );
-
-
-        button.disabled = true;
-
-        button.textContent =
-            "Entrando...";
-
-        showLoginMessage("");
-
-
-        try {
-
-            const {
-                data,
-                error
-            } = await supabaseClient.auth.signInWithPassword({
-                email,
-                password
-            });
-
-
-            if (error) {
-                throw error;
-            }
-
-
-            if (!data.session) {
-
-                throw new Error(
-                    "Não foi possível criar a sessão."
-                );
-            }
-
-
-            showLoginMessage(
-                "Login realizado com sucesso!",
-                "success"
-            );
-
-
-            await showApp(data.user);
-
-
-        } catch (error) {
-
-            console.error(error);
-
-            let message =
-                "Não foi possível entrar.";
-
-            if (
-                error.message
-                ?.toLowerCase()
-                .includes("invalid login credentials")
-            ) {
-
-                message =
-                    "E-mail ou senha incorretos.";
-
-            } else if (
-                error.message
-                ?.toLowerCase()
-                .includes("email not confirmed")
-            ) {
-
-                message =
-                    "Seu e-mail ainda não foi confirmado.";
-
-            } else if (error.message) {
-
-                message =
-                    error.message;
-            }
-
-
-            showLoginMessage(
-                message,
-                "error"
-            );
-
-
-        } finally {
-
-            button.disabled = false;
-
-            button.textContent =
-                "Entrar";
-        }
-    }
-);
-
-
-/* =========================================================
-   LOGOUT
-========================================================= */
-
-logoutButton.addEventListener(
-    "click",
-    async function () {
-
-        logoutButton.disabled = true;
-
-        logoutButton.textContent =
-            "Saindo...";
-
-
-        try {
-
-            const {
-                error
-            } = await supabaseClient.auth.signOut();
-
-            if (error) {
-                throw error;
-            }
-
-            showLogin();
-
-
-        } catch (error) {
-
-            console.error(
-                "Erro ao sair:",
-                error
-            );
-
-            alert(
-                "Não foi possível sair. Tente novamente."
-            );
-
-        } finally {
-
-            logoutButton.disabled = false;
-
-            logoutButton.textContent =
-                "⇥ Sair";
-        }
-    }
-);
-
-
-/* =========================================================
-   RECUPERAÇÃO DE SENHA
-========================================================= */
-
-forgotPassword.addEventListener(
-    "click",
-    function () {
-
-        recoveryEmail.value =
-            document.getElementById(
-                "email"
-            ).value.trim();
-
-        recoveryMessage.textContent = "";
-
-        recoveryMessage.className =
-            "message";
-
-        passwordModal.classList.remove(
-            "hidden"
-        );
-    }
-);
-
-
-closeModal.addEventListener(
-    "click",
-    function () {
-
-        passwordModal.classList.add(
-            "hidden"
-        );
-    }
-);
-
-
-passwordModal.addEventListener(
-    "click",
-    function (event) {
-
-        if (
-            event.target === passwordModal
-        ) {
-
-            passwordModal.classList.add(
-                "hidden"
-            );
-        }
-    }
-);
-
-
-sendRecovery.addEventListener(
-    "click",
-    async function () {
-
-        const email =
-            recoveryEmail.value.trim();
-
-
-        if (!email) {
-
-            showRecoveryMessage(
-                "Digite seu e-mail."
-            );
-
-            return;
-        }
-
-
-        sendRecovery.disabled = true;
-
-        sendRecovery.textContent =
-            "Enviando...";
-
-
-        try {
-
-            const redirectUrl =
-                window.location.origin +
-                window.location.pathname;
-
-
-            const {
-                error
-            } =
-                await supabaseClient.auth.resetPasswordForEmail(
-                    email,
-                    {
-                        redirectTo: redirectUrl
-                    }
-                );
-
-
-            if (error) {
-                throw error;
-            }
-
-
-            showRecoveryMessage(
-                "Se o e-mail estiver cadastrado, você receberá as instruções.",
-                "success"
-            );
-
-
-        } catch (error) {
-
-            console.error(error);
-
-            showRecoveryMessage(
-                error.message ||
-                "Não foi possível enviar o e-mail."
-            );
-
-
-        } finally {
-
-            sendRecovery.disabled = false;
-
-            sendRecovery.textContent =
-                "Enviar recuperação";
-        }
-    }
-);
 
 
 /* =========================================================
@@ -567,116 +353,225 @@ const menuItems =
 const sections = {
 
     dashboard: {
-        element: "dashboardSection",
-        title: "Dashboard",
-        subtitle: "Visão geral do sistema"
+
+        element:
+            "dashboardSection",
+
+        title:
+            "Dashboard",
+
+        subtitle:
+            "Visão geral do sistema"
+
     },
+
 
     motores: {
-        element: "motoresSection",
-        title: "Motores",
-        subtitle: "Equipamentos e ativos"
+
+        element:
+            "motoresSection",
+
+        title:
+            "Motores",
+
+        subtitle:
+            "Equipamentos e ativos"
+
     },
+
 
     ordens: {
-        element: "ordensSection",
-        title: "Ordens de Serviço",
-        subtitle: "Controle da manutenção"
+
+        element:
+            "ordensSection",
+
+        title:
+            "Ordens de Serviço",
+
+        subtitle:
+            "Controle da manutenção"
+
     },
+
 
     checklists: {
-        element: "checklistsSection",
-        title: "Checklists",
-        subtitle: "Inspeções e rotinas"
+
+        element:
+            "checklistsSection",
+
+        title:
+            "Checklists",
+
+        subtitle:
+            "Inspeções e rotinas"
+
     },
+
 
     usuarios: {
-        element: "usuariosSection",
-        title: "Usuários",
-        subtitle: "Controle de acesso"
+
+        element:
+            "usuariosSection",
+
+        title:
+            "Usuários",
+
+        subtitle:
+            "Controle de acesso"
+
     },
 
+
     perfil: {
-        element: "perfilSection",
-        title: "Meu Perfil",
-        subtitle: "Informações da conta"
+
+        element:
+            "perfilSection",
+
+        title:
+            "Meu Perfil",
+
+        subtitle:
+            "Informações da conta"
+
     }
 
 };
 
 
+/* =========================================================
+   CLIQUES DO MENU
+========================================================= */
+
 menuItems.forEach(
+
     function (button) {
 
         button.addEventListener(
+
             "click",
+
             function () {
 
                 const section =
                     button.dataset.section;
 
-                openSection(section);
 
-                sidebar.classList.remove(
-                    "mobile-open"
+                openSection(
+                    section
                 );
+
+
+                if (sidebar) {
+
+                    sidebar.classList.remove(
+                        "mobile-open"
+                    );
+
+                }
+
             }
+
         );
+
     }
+
 );
 
+
+/* =========================================================
+   ABRIR SEÇÃO
+========================================================= */
 
 function openSection(sectionName) {
 
     const section =
         sections[sectionName];
 
+
     if (!section) {
+
         return;
+
     }
 
 
     document
-        .querySelectorAll(".page-section")
+        .querySelectorAll(
+            ".page-section"
+        )
         .forEach(
+
             function (element) {
 
                 element.classList.remove(
                     "active-section"
                 );
+
             }
+
         );
 
 
-    document
-        .getElementById(section.element)
-        .classList.add(
+    const sectionElement =
+        document.getElementById(
+            section.element
+        );
+
+
+    if (sectionElement) {
+
+        sectionElement.classList.add(
             "active-section"
         );
 
+    }
+
 
     menuItems.forEach(
+
         function (item) {
 
             item.classList.toggle(
+
                 "active",
+
                 item.dataset.section ===
                 sectionName
+
             );
+
         }
+
     );
 
 
-    document.getElementById(
-        "pageTitle"
-    ).textContent =
-        section.title;
+    const pageTitle =
+        document.getElementById(
+            "pageTitle"
+        );
 
 
-    document.getElementById(
-        "pageSubtitle"
-    ).textContent =
-        section.subtitle;
+    const pageSubtitle =
+        document.getElementById(
+            "pageSubtitle"
+        );
+
+
+    if (pageTitle) {
+
+        pageTitle.textContent =
+            section.title;
+
+    }
+
+
+    if (pageSubtitle) {
+
+        pageSubtitle.textContent =
+            section.subtitle;
+
+    }
+
 }
 
 
@@ -684,15 +579,27 @@ function openSection(sectionName) {
    MENU MOBILE
 ========================================================= */
 
-mobileMenuButton.addEventListener(
-    "click",
-    function () {
+if (mobileMenuButton) {
 
-        sidebar.classList.toggle(
-            "mobile-open"
-        );
-    }
-);
+    mobileMenuButton.addEventListener(
+
+        "click",
+
+        function () {
+
+            if (sidebar) {
+
+                sidebar.classList.toggle(
+                    "mobile-open"
+                );
+
+            }
+
+        }
+
+    );
+
+}
 
 
 /* =========================================================
@@ -702,79 +609,114 @@ mobileMenuButton.addEventListener(
 async function loadDashboard() {
 
     /*
-       Nesta primeira versão ainda não vamos consultar
-       tabelas de motores, OS ou checklists.
-
-       Isso evita erros enquanto as tabelas do GRID-X
-       ainda não foram criadas.
+       Mantido conforme a estrutura original.
+       As consultas ao banco serão adicionadas
+       quando as tabelas do GRID-X estiverem prontas.
     */
 
 
-    document.getElementById(
-        "motorCount"
-    ).textContent = "0";
+    const motorCount =
+        document.getElementById(
+            "motorCount"
+        );
 
 
-    document.getElementById(
-        "osCount"
-    ).textContent = "0";
+    const osCount =
+        document.getElementById(
+            "osCount"
+        );
 
 
-    document.getElementById(
-        "checklistCount"
-    ).textContent = "0";
+    const checklistCount =
+        document.getElementById(
+            "checklistCount"
+        );
 
 
-    document.getElementById(
-        "profileStatus"
-    ).textContent = "Ativo";
+    const profileStatus =
+        document.getElementById(
+            "profileStatus"
+        );
 
 
-    document.getElementById(
-        "supabaseStatus"
-    ).textContent = "Conectado";
+    const supabaseStatus =
+        document.getElementById(
+            "supabaseStatus"
+        );
 
 
-    document.getElementById(
-        "authStatus"
-    ).textContent = "Verificada";
+    const authStatus =
+        document.getElementById(
+            "authStatus"
+        );
 
 
-    document.getElementById(
-        "sessionStatus"
-    ).textContent = "Ativa";
+    const sessionStatus =
+        document.getElementById(
+            "sessionStatus"
+        );
+
+
+    if (motorCount) {
+
+        motorCount.textContent =
+            "0";
+
+    }
+
+
+    if (osCount) {
+
+        osCount.textContent =
+            "0";
+
+    }
+
+
+    if (checklistCount) {
+
+        checklistCount.textContent =
+            "0";
+
+    }
+
+
+    if (profileStatus) {
+
+        profileStatus.textContent =
+            "Ativo";
+
+    }
+
+
+    if (supabaseStatus) {
+
+        supabaseStatus.textContent =
+            "Conectado";
+
+    }
+
+
+    if (authStatus) {
+
+        authStatus.textContent =
+            "Acesso direto";
+
+    }
+
+
+    if (sessionStatus) {
+
+        sessionStatus.textContent =
+            "Ativa";
+
+    }
+
 }
 
 
 /* =========================================================
-   OBSERVAR ALTERAÇÕES DE AUTENTICAÇÃO
-========================================================= */
-
-supabaseClient.auth.onAuthStateChange(
-    async function (event, session) {
-
-        console.log(
-            "Evento de autenticação:",
-            event
-        );
-
-
-        if (session?.user) {
-
-            updateUserInterface(
-                session.user
-            );
-
-        } else {
-
-            showLogin();
-        }
-    }
-);
-
-
-/* =========================================================
-   VERIFICAR SESSÃO AO ABRIR
+   INICIALIZAÇÃO DA APLICAÇÃO
 ========================================================= */
 
 async function initializeApplication() {
@@ -784,55 +726,28 @@ async function initializeApplication() {
     );
 
 
-    const connected =
-        await checkSupabaseConnection();
+    /*
+       Não verifica mais:
+       - e-mail
+       - senha
+       - sessão
+       - usuário autenticado
+    */
 
 
-    if (!connected) {
-
-        showLoginMessage(
-            "Não foi possível conectar ao Supabase."
-        );
-
-        return;
-    }
+    await showApp(
+        defaultUser
+    );
 
 
-    try {
+    /*
+       Abre o Dashboard automaticamente.
+    */
 
-        const {
-            data,
-            error
-        } =
-            await supabaseClient.auth.getSession();
+    openSection(
+        "dashboard"
+    );
 
-
-        if (error) {
-            throw error;
-        }
-
-
-        if (data.session?.user) {
-
-            await showApp(
-                data.session.user
-            );
-
-        } else {
-
-            showLogin();
-        }
-
-
-    } catch (error) {
-
-        console.error(
-            "Erro ao verificar sessão:",
-            error
-        );
-
-        showLogin();
-    }
 }
 
 
@@ -841,10 +756,14 @@ async function initializeApplication() {
 ========================================================= */
 
 document.addEventListener(
+
     "DOMContentLoaded",
+
     function () {
 
         initializeApplication();
 
     }
+
 );
+```
