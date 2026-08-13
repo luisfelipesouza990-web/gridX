@@ -1,8 +1,8 @@
 ```javascript
 /* ============================================================
    GRID-X CONTROL
-   app.js
-   Plataforma de Energia, IA, Sustentabilidade e Inovação
+   APP.JS
+   Plataforma GRID-X
    ============================================================ */
 
 
@@ -10,16 +10,11 @@
    CONFIGURAÇÃO SUPABASE
    ============================================================ */
 
-const SUPABASE_URL = "https://fshnewxgiskenkkgfbnv.supabase.co";
+const SUPABASE_URL =
+    "https://fshnewxgiskenkkgfbnv.supabase.co";
 
-/*
-   IMPORTANTE:
-   Coloque aqui a ANON KEY / Publishable Key do seu projeto.
-
-   Nunca coloque a service_role key neste arquivo.
-*/
-
-const SUPABASE_ANON_KEY = "COLE_AQUI_SUA_ANON_KEY";
+const SUPABASE_ANON_KEY =
+    "sb_publishable_Uy4h5ag9SKPOUwhY4yS6dQ_1EpsrnZ1";
 
 
 let supabaseClient = null;
@@ -29,21 +24,41 @@ let supabaseClient = null;
    INICIALIZAÇÃO
    ============================================================ */
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener(
+    "DOMContentLoaded",
+    iniciarAplicacao
+);
+
+
+async function iniciarAplicacao() {
+
+    console.log(
+        "GRID-X CONTROL iniciando..."
+    );
+
 
     inicializarSupabase();
 
-    inicializarNavegacao();
+    inicializarMenu();
 
     inicializarMenuMobile();
 
-    carregarDados();
+    atualizarCabecalho(
+        "dashboard"
+    );
 
-});
+    await carregarDados();
+
+
+    console.log(
+        "GRID-X CONTROL iniciado com sucesso."
+    );
+
+}
 
 
 /* ============================================================
-   SUPABASE
+   CONEXÃO SUPABASE
    ============================================================ */
 
 function inicializarSupabase() {
@@ -51,59 +66,50 @@ function inicializarSupabase() {
     try {
 
         if (
-            typeof window.supabase === "undefined"
+            typeof window.supabase ===
+            "undefined"
         ) {
 
-            console.warn(
+            console.error(
                 "Biblioteca Supabase não encontrada."
             );
 
-            atualizarStatusSupabase(false);
-
-            return;
-
-        }
-
-
-        if (
-            !SUPABASE_URL ||
-            !SUPABASE_ANON_KEY ||
-            SUPABASE_ANON_KEY === "COLE_AQUI_SUA_ANON_KEY"
-        ) {
-
-            console.warn(
-                "Configure a SUPABASE_ANON_KEY no app.js."
+            atualizarStatusSupabase(
+                false
             );
 
-            atualizarStatusSupabase(false);
-
             return;
 
         }
 
 
-        supabaseClient = window.supabase.createClient(
-            SUPABASE_URL,
-            SUPABASE_ANON_KEY
+        supabaseClient =
+            window.supabase.createClient(
+                SUPABASE_URL,
+                SUPABASE_ANON_KEY
+            );
+
+
+        atualizarStatusSupabase(
+            true
         );
-
-
-        atualizarStatusSupabase(true);
 
 
         console.log(
-            "GRID-X CONTROL conectado ao Supabase."
+            "Supabase conectado."
         );
 
 
-    } catch (error) {
+    } catch (erro) {
 
         console.error(
-            "Erro ao inicializar Supabase:",
-            error
+            "Erro ao conectar ao Supabase:",
+            erro
         );
 
-        atualizarStatusSupabase(false);
+        atualizarStatusSupabase(
+            false
+        );
 
     }
 
@@ -111,31 +117,61 @@ function inicializarSupabase() {
 
 
 /* ============================================================
-   NAVEGAÇÃO
+   MENU
    ============================================================ */
 
-function inicializarNavegacao() {
+function inicializarMenu() {
 
-    const menuItems = document.querySelectorAll(
-        ".menu-item"
+    const menuItems =
+        document.querySelectorAll(
+            ".menu-item"
+        );
+
+
+    console.log(
+        "Menus encontrados:",
+        menuItems.length
     );
 
 
-    menuItems.forEach(item => {
+    menuItems.forEach(
+        item => {
 
-        item.addEventListener(
-            "click",
-            () => {
+            item.addEventListener(
+                "click",
+                function (evento) {
 
-                const sectionName =
-                    item.dataset.section;
+                    evento.preventDefault();
 
-                abrirSecao(sectionName);
+                    const secao =
+                        this.dataset.section;
 
-            }
-        );
 
-    });
+                    if (!secao) {
+
+                        console.warn(
+                            "Menu sem data-section."
+                        );
+
+                        return;
+
+                    }
+
+
+                    abrirSecao(
+                        secao
+                    );
+
+                }
+            );
+
+        }
+    );
+
+
+    abrirSecao(
+        "dashboard"
+    );
 
 }
 
@@ -144,46 +180,76 @@ function inicializarNavegacao() {
    ABRIR SEÇÃO
    ============================================================ */
 
-function abrirSecao(sectionName) {
+function abrirSecao(
+    nomeSecao
+) {
 
-    const sections = document.querySelectorAll(
-        ".page-section"
+    console.log(
+        "Abrindo:",
+        nomeSecao
     );
 
 
-    sections.forEach(section => {
+    /*
+       Esconde todas as seções
+    */
 
-        section.classList.remove(
-            "active-section"
+    const sections =
+        document.querySelectorAll(
+            ".page-section"
         );
 
-    });
 
+    sections.forEach(
+        section => {
 
-    const menuItems = document.querySelectorAll(
-        ".menu-item"
+            section.classList.remove(
+                "active-section"
+            );
+
+            section.style.display =
+                "none";
+
+        }
     );
 
 
-    menuItems.forEach(item => {
+    /*
+       Remove o ativo dos menus
+    */
 
-        item.classList.remove(
-            "active"
+    const menus =
+        document.querySelectorAll(
+            ".menu-item"
         );
 
-    });
+
+    menus.forEach(
+        menu => {
+
+            menu.classList.remove(
+                "active"
+            );
+
+        }
+    );
 
 
-    const targetSection =
+    /*
+       Localiza a seção escolhida
+    */
+
+    const secao =
         document.getElementById(
-            `${sectionName}Section`
+            nomeSecao + "Section"
         );
 
 
-    if (!targetSection) {
+    if (!secao) {
 
-        console.warn(
-            `Seção não encontrada: ${sectionName}`
+        console.error(
+            "Seção não encontrada:",
+            nomeSecao + "Section"
         );
 
         return;
@@ -191,47 +257,79 @@ function abrirSecao(sectionName) {
     }
 
 
-    targetSection.classList.add(
+    /*
+       Mostra a seção
+    */
+
+    secao.style.display =
+        "block";
+
+    secao.classList.add(
         "active-section"
     );
 
 
-    const activeMenu =
+    /*
+       Ativa o botão
+    */
+
+    const menuAtivo =
         document.querySelector(
-            `.menu-item[data-section="${sectionName}"]`
+            `.menu-item[data-section="${nomeSecao}"]`
         );
 
 
-    if (activeMenu) {
+    if (menuAtivo) {
 
-        activeMenu.classList.add(
+        menuAtivo.classList.add(
             "active"
         );
 
     }
 
 
+    /*
+       Atualiza título
+    */
+
     atualizarCabecalho(
-        sectionName
+        nomeSecao
     );
 
 
+    /*
+       Fecha menu mobile
+    */
+
     fecharMenuMobile();
+
+
+    /*
+       Volta ao topo
+    */
+
+    window.scrollTo(
+        {
+            top: 0,
+            behavior: "smooth"
+        }
+    );
 
 }
 
 
 /* ============================================================
-   TÍTULOS DAS SEÇÕES
+   TÍTULOS
    ============================================================ */
 
-const sectionInfo = {
+const paginas = {
 
     dashboard: {
 
-        title: "Dashboard",
+        titulo:
+            "Dashboard",
 
-        subtitle:
+        subtitulo:
             "Visão geral do ecossistema GRID-X"
 
     },
@@ -239,9 +337,10 @@ const sectionInfo = {
 
     ai: {
 
-        title: "GRID-X AI",
+        titulo:
+            "GRID-X AI",
 
-        subtitle:
+        subtitulo:
             "Inteligência artificial e análise energética"
 
     },
@@ -249,9 +348,10 @@ const sectionInfo = {
 
     energia: {
 
-        title: "Energia",
+        titulo:
+            "Energia",
 
-        subtitle:
+        subtitulo:
             "Monitoramento da geração, consumo e eficiência"
 
     },
@@ -259,9 +359,10 @@ const sectionInfo = {
 
     ativos: {
 
-        title: "Ativos Energéticos",
+        titulo:
+            "Ativos Energéticos",
 
-        subtitle:
+        subtitulo:
             "Gestão dos ativos do ecossistema GRID-X"
 
     },
@@ -269,19 +370,21 @@ const sectionInfo = {
 
     mercado: {
 
-        title: "Mercado de Energia",
+        titulo:
+            "Mercado de Energia",
 
-        subtitle:
-            "Gestão e visualização do mercado digital de energia"
+        subtitulo:
+            "Gestão do mercado digital de energia"
 
     },
 
 
     v2g: {
 
-        title: "V2G",
+        titulo:
+            "V2G",
 
-        subtitle:
+        subtitulo:
             "Integração entre veículos elétricos e rede"
 
     },
@@ -289,9 +392,10 @@ const sectionInfo = {
 
     sustentabilidade: {
 
-        title: "Sustentabilidade",
+        titulo:
+            "Sustentabilidade",
 
-        subtitle:
+        subtitulo:
             "Indicadores ambientais, sociais e de governança"
 
     },
@@ -299,9 +403,10 @@ const sectionInfo = {
 
     projetos: {
 
-        title: "Projetos & Inovação",
+        titulo:
+            "Projetos & Inovação",
 
-        subtitle:
+        subtitulo:
             "Pesquisa, desenvolvimento e novas tecnologias"
 
     },
@@ -309,9 +414,10 @@ const sectionInfo = {
 
     relatorios: {
 
-        title: "Relatórios",
+        titulo:
+            "Relatórios",
 
-        subtitle:
+        subtitulo:
             "Indicadores e informações estratégicas"
 
     },
@@ -319,9 +425,10 @@ const sectionInfo = {
 
     usuarios: {
 
-        title: "Usuários",
+        titulo:
+            "Usuários",
 
-        subtitle:
+        subtitulo:
             "Gerenciamento dos usuários da plataforma"
 
     },
@@ -329,9 +436,10 @@ const sectionInfo = {
 
     perfil: {
 
-        title: "Meu Perfil",
+        titulo:
+            "Meu Perfil",
 
-        subtitle:
+        subtitulo:
             "Informações do acesso à plataforma"
 
     }
@@ -344,44 +452,44 @@ const sectionInfo = {
    ============================================================ */
 
 function atualizarCabecalho(
-    sectionName
+    nomeSecao
 ) {
 
-    const titleElement =
-        document.getElementById(
-            "pageTitle"
-        );
+    const pagina =
+        paginas[nomeSecao];
 
 
-    const subtitleElement =
-        document.getElementById(
-            "pageSubtitle"
-        );
-
-
-    const info =
-        sectionInfo[sectionName];
-
-
-    if (!info) {
+    if (!pagina) {
 
         return;
 
     }
 
 
-    if (titleElement) {
+    const titulo =
+        document.getElementById(
+            "pageTitle"
+        );
 
-        titleElement.textContent =
-            info.title;
+
+    const subtitulo =
+        document.getElementById(
+            "pageSubtitle"
+        );
+
+
+    if (titulo) {
+
+        titulo.textContent =
+            pagina.titulo;
 
     }
 
 
-    if (subtitleElement) {
+    if (subtitulo) {
 
-        subtitleElement.textContent =
-            info.subtitle;
+        subtitulo.textContent =
+            pagina.subtitulo;
 
     }
 
@@ -394,7 +502,7 @@ function atualizarCabecalho(
 
 function inicializarMenuMobile() {
 
-    const button =
+    const botao =
         document.getElementById(
             "mobileMenuButton"
         );
@@ -406,16 +514,16 @@ function inicializarMenuMobile() {
         );
 
 
-    if (!button || !sidebar) {
+    if (!botao || !sidebar) {
 
         return;
 
     }
 
 
-    button.addEventListener(
+    botao.addEventListener(
         "click",
-        () => {
+        function () {
 
             sidebar.classList.toggle(
                 "mobile-open"
@@ -461,13 +569,13 @@ function atualizarStatusSupabase(
     conectado
 ) {
 
-    const element =
+    const elemento =
         document.getElementById(
             "supabaseStatus"
         );
 
 
-    if (!element) {
+    if (!elemento) {
 
         return;
 
@@ -476,27 +584,27 @@ function atualizarStatusSupabase(
 
     if (conectado) {
 
-        element.textContent =
+        elemento.textContent =
             "Conectado";
 
-        element.classList.remove(
+        elemento.classList.remove(
             "status-error"
         );
 
-        element.classList.add(
+        elemento.classList.add(
             "status-ok"
         );
 
     } else {
 
-        element.textContent =
-            "Não configurado";
+        elemento.textContent =
+            "Erro de conexão";
 
-        element.classList.remove(
+        elemento.classList.remove(
             "status-ok"
         );
 
-        element.classList.add(
+        elemento.classList.add(
             "status-error"
         );
 
@@ -513,10 +621,6 @@ async function carregarDados() {
 
     if (!supabaseClient) {
 
-        console.log(
-            "Supabase ainda não configurado."
-        );
-
         return;
 
     }
@@ -524,13 +628,13 @@ async function carregarDados() {
 
     await carregarAtivos();
 
-    await carregarPredicoes();
+    await carregarAI();
 
-    await carregarDadosEnergia();
+    await carregarEnergia();
 
     await carregarV2G();
 
-    await carregarSustentabilidade();
+    await carregarESG();
 
 }
 
@@ -546,15 +650,18 @@ async function carregarAtivos() {
         const {
             data,
             error
-        } = await supabaseClient
-            .from("ativos_energeticos")
-            .select("*");
+        } =
+            await supabaseClient
+                .from(
+                    "ativos_energeticos"
+                )
+                .select("*");
 
 
         if (error) {
 
             console.warn(
-                "Tabela ativos_energeticos:",
+                "Ativos:",
                 error.message
             );
 
@@ -563,21 +670,17 @@ async function carregarAtivos() {
         }
 
 
-        const quantidade =
-            data?.length || 0;
-
-
         console.log(
-            "Ativos encontrados:",
-            quantidade
+            "Ativos carregados:",
+            data?.length || 0
         );
 
 
-    } catch (error) {
+    } catch (erro) {
 
         console.error(
-            "Erro ao carregar ativos:",
-            error
+            "Erro nos ativos:",
+            erro
         );
 
     }
@@ -589,22 +692,25 @@ async function carregarAtivos() {
    GRID-X AI
    ============================================================ */
 
-async function carregarPredicoes() {
+async function carregarAI() {
 
     try {
 
         const {
             data,
             error
-        } = await supabaseClient
-            .from("ai_predictions")
-            .select("*");
+        } =
+            await supabaseClient
+                .from(
+                    "ai_predictions"
+                )
+                .select("*");
 
 
         if (error) {
 
             console.warn(
-                "Tabela ai_predictions:",
+                "GRID-X AI:",
                 error.message
             );
 
@@ -613,37 +719,59 @@ async function carregarPredicoes() {
         }
 
 
-        const total =
-            data?.length || 0;
+        const registros =
+            data || [];
 
 
-        atualizarTexto(
+        atualizarElemento(
             "predictionCount",
-            total
+            registros.length
         );
 
 
         const anomalias =
-            data
-                ? data.filter(
-                    item =>
-                        item.type === "anomaly" ||
-                        item.prediction_type === "anomaly"
-                ).length
-                : 0;
+            registros.filter(
+                item => {
+
+                    const tipo =
+                        String(
+                            item.type ||
+                            item.prediction_type ||
+                            item.tipo ||
+                            ""
+                        ).toLowerCase();
 
 
-        atualizarTexto(
+                    return (
+                        tipo.includes(
+                            "anomaly"
+                        ) ||
+                        tipo.includes(
+                            "anomalia"
+                        )
+                    );
+
+                }
+            ).length;
+
+
+        atualizarElemento(
             "anomalyCount",
             anomalias
         );
 
 
-    } catch (error) {
+        console.log(
+            "Previsões IA:",
+            registros.length
+        );
+
+
+    } catch (erro) {
 
         console.error(
-            "Erro ao carregar IA:",
-            error
+            "Erro GRID-X AI:",
+            erro
         );
 
     }
@@ -652,35 +780,28 @@ async function carregarPredicoes() {
 
 
 /* ============================================================
-   DADOS DE ENERGIA
+   ENERGIA
    ============================================================ */
 
-async function carregarDadosEnergia() {
+async function carregarEnergia() {
 
     try {
-
-        /*
-           Esta função tenta utilizar a tabela
-           "geracao_energia".
-
-           Se a tabela ainda não existir,
-           o sistema simplesmente mantém os
-           indicadores em zero.
-        */
-
 
         const {
             data,
             error
-        } = await supabaseClient
-            .from("geracao_energia")
-            .select("*");
+        } =
+            await supabaseClient
+                .from(
+                    "geracao_energia"
+                )
+                .select("*");
 
 
         if (error) {
 
             console.warn(
-                "Tabela geracao_energia:",
+                "Geração de energia:",
                 error.message
             );
 
@@ -689,54 +810,61 @@ async function carregarDadosEnergia() {
         }
 
 
-        if (!data || data.length === 0) {
-
-            return;
-
-        }
+        const registros =
+            data || [];
 
 
-        let totalGerado = 0;
+        let total =
+            0;
 
 
-        data.forEach(item => {
+        registros.forEach(
+            item => {
 
-            const valor =
-                Number(
-                    item.energy_kwh ??
-                    item.energia_kwh ??
-                    item.generation_kwh ??
-                    item.valor ??
-                    0
-                );
+                const valor =
+                    Number(
+                        item.energy_kwh ??
+                        item.energia_kwh ??
+                        item.generation_kwh ??
+                        item.geracao_kwh ??
+                        item.valor ??
+                        0
+                    );
 
 
-            if (!Number.isNaN(valor)) {
+                if (
+                    Number.isFinite(
+                        valor
+                    )
+                ) {
 
-                totalGerado += valor;
+                    total +=
+                        valor;
+
+                }
 
             }
-
-        });
-
-
-        const valorFormatado =
-            formatarNumero(
-                totalGerado
-            );
-
-
-        atualizarTexto(
-            "energyGenerated",
-            `${valorFormatado} kWh`
         );
 
 
-    } catch (error) {
+        atualizarElemento(
+            "energyGenerated",
+            formatarNumero(total) +
+            " kWh"
+        );
+
+
+        console.log(
+            "Energia gerada:",
+            total
+        );
+
+
+    } catch (erro) {
 
         console.error(
-            "Erro ao carregar energia:",
-            error
+            "Erro energia:",
+            erro
         );
 
     }
@@ -755,15 +883,18 @@ async function carregarV2G() {
         const {
             data,
             error
-        } = await supabaseClient
-            .from("v2g")
-            .select("*");
+        } =
+            await supabaseClient
+                .from(
+                    "v2g"
+                )
+                .select("*");
 
 
         if (error) {
 
             console.warn(
-                "Tabela v2g:",
+                "V2G:",
                 error.message
             );
 
@@ -772,21 +903,17 @@ async function carregarV2G() {
         }
 
 
-        const quantidade =
-            data?.length || 0;
-
-
         console.log(
             "Registros V2G:",
-            quantidade
+            data?.length || 0
         );
 
 
-    } catch (error) {
+    } catch (erro) {
 
         console.error(
-            "Erro ao carregar V2G:",
-            error
+            "Erro V2G:",
+            erro
         );
 
     }
@@ -795,25 +922,28 @@ async function carregarV2G() {
 
 
 /* ============================================================
-   SUSTENTABILIDADE
+   ESG
    ============================================================ */
 
-async function carregarSustentabilidade() {
+async function carregarESG() {
 
     try {
 
         const {
             data,
             error
-        } = await supabaseClient
-            .from("indicadores_esg")
-            .select("*");
+        } =
+            await supabaseClient
+                .from(
+                    "indicadores_esg"
+                )
+                .select("*");
 
 
         if (error) {
 
             console.warn(
-                "Tabela indicadores_esg:",
+                "ESG:",
                 error.message
             );
 
@@ -822,47 +952,60 @@ async function carregarSustentabilidade() {
         }
 
 
-        if (!data || data.length === 0) {
-
-            return;
-
-        }
+        const registros =
+            data || [];
 
 
-        let co2Total = 0;
+        let co2 =
+            0;
 
 
-        data.forEach(item => {
+        registros.forEach(
+            item => {
 
-            const valor =
-                Number(
-                    item.co2_avoided ??
-                    item.co2_evitado ??
-                    item.valor_co2 ??
-                    0
-                );
+                const valor =
+                    Number(
+                        item.co2_avoided ??
+                        item.co2_evitado ??
+                        item.co2_avoitado ??
+                        item.valor_co2 ??
+                        0
+                    );
 
 
-            if (!Number.isNaN(valor)) {
+                if (
+                    Number.isFinite(
+                        valor
+                    )
+                ) {
 
-                co2Total += valor;
+                    co2 +=
+                        valor;
+
+                }
 
             }
-
-        });
-
-
-        atualizarTexto(
-            "co2Avoided",
-            `${formatarNumero(co2Total)} kg`
         );
 
 
-    } catch (error) {
+        atualizarElemento(
+            "co2Avoided",
+            formatarNumero(co2) +
+            " kg"
+        );
+
+
+        console.log(
+            "CO2 evitado:",
+            co2
+        );
+
+
+    } catch (erro) {
 
         console.error(
-            "Erro ao carregar sustentabilidade:",
-            error
+            "Erro ESG:",
+            erro
         );
 
     }
@@ -871,33 +1014,35 @@ async function carregarSustentabilidade() {
 
 
 /* ============================================================
-   FUNÇÃO AUXILIAR — ATUALIZAR TEXTO
+   ATUALIZAR ELEMENTO
    ============================================================ */
 
-function atualizarTexto(
+function atualizarElemento(
     id,
     valor
 ) {
 
-    const element =
-        document.getElementById(id);
+    const elemento =
+        document.getElementById(
+            id
+        );
 
 
-    if (!element) {
+    if (!elemento) {
 
         return;
 
     }
 
 
-    element.textContent =
+    elemento.textContent =
         valor;
 
 }
 
 
 /* ============================================================
-   FORMATAÇÃO DE NÚMEROS
+   FORMATAÇÃO
    ============================================================ */
 
 function formatarNumero(
@@ -918,69 +1063,79 @@ function formatarNumero(
 
 
 /* ============================================================
-   SISTEMA ONLINE
+   ATUALIZAÇÃO DO SISTEMA
    ============================================================ */
 
-function atualizarSistemaOnline() {
+function atualizarSistema() {
 
-    const status =
+    const elemento =
         document.getElementById(
-            "sessionStatus"
+            "systemStatus"
         );
 
 
-    if (!status) {
+    if (elemento) {
 
-        return;
+        elemento.textContent =
+            "Operacional";
 
     }
-
-
-    status.textContent =
-        "Ativo";
 
 }
 
 
 /* ============================================================
-   RELÓGIO / ATUALIZAÇÃO PERIÓDICA
+   ATUALIZAÇÃO AUTOMÁTICA
    ============================================================ */
 
 setInterval(
-    () => {
+    async function () {
 
-        atualizarSistemaOnline();
+        atualizarSistema();
+
+
+        if (supabaseClient) {
+
+            await carregarDados();
+
+        }
 
     },
-    30000
+    60000
 );
 
 
 /* ============================================================
    API GLOBAL
-   Permite que outros arquivos utilizem funções do sistema.
    ============================================================ */
 
 window.GRIDX = {
 
-    abrirSecao,
+    abrirSecao:
+        abrirSecao,
 
-    carregarDados,
+    carregarDados:
+        carregarDados,
 
-    carregarAtivos,
+    carregarAtivos:
+        carregarAtivos,
 
-    carregarPredicoes,
+    carregarAI:
+        carregarAI,
 
-    carregarDadosEnergia,
+    carregarEnergia:
+        carregarEnergia,
 
-    carregarV2G,
+    carregarV2G:
+        carregarV2G,
 
-    carregarSustentabilidade
+    carregarESG:
+        carregarESG
 
 };
 
 
 /* ============================================================
-   FIM DO APP.JS
+   FIM
    ============================================================ */
 ```
