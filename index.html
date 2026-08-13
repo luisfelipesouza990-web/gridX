@@ -1,106 +1,59 @@
+```html
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
+
     <meta charset="UTF-8">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-    <meta name="theme-color" content="#111827">
+    <meta
+        name="theme-color"
+        content="#111827"
+    >
 
     <title>GRID-X CONTROL</title>
 
-    <link rel="stylesheet" href="style.css">
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
 
     <!-- Supabase -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script
+        src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
+    </script>
+
 </head>
 
+
 <body>
-
-    <!-- =========================================================
-         TELA DE LOGIN
-    ========================================================== -->
-
-    <section id="loginScreen" class="screen login-screen">
-
-        <div class="login-card">
-
-            <div class="logo-area">
-                <div class="logo-icon">GX</div>
-
-                <h1>GRID-X</h1>
-                <p>CONTROL</p>
-            </div>
-
-            <div class="login-title">
-                <h2>Acesso ao sistema</h2>
-                <span>Gestão inteligente de manutenção</span>
-            </div>
-
-            <form id="loginForm">
-
-                <div class="input-group">
-                    <label for="email">E-mail</label>
-
-                    <input
-                        type="email"
-                        id="email"
-                        placeholder="seu@email.com"
-                        autocomplete="email"
-                        required
-                    >
-                </div>
-
-                <div class="input-group">
-                    <label for="password">Senha</label>
-
-                    <input
-                        type="password"
-                        id="password"
-                        placeholder="Digite sua senha"
-                        autocomplete="current-password"
-                        required
-                    >
-                </div>
-
-                <button type="submit" class="btn-primary">
-                    Entrar
-                </button>
-
-                <button
-                    type="button"
-                    id="forgotPassword"
-                    class="btn-link"
-                >
-                    Esqueci minha senha
-                </button>
-
-            </form>
-
-            <div id="loginMessage" class="message"></div>
-
-            <div class="connection-status">
-                <span id="connectionDot"></span>
-                <span id="connectionText">
-                    Verificando conexão...
-                </span>
-            </div>
-
-        </div>
-
-    </section>
 
 
     <!-- =========================================================
          APLICAÇÃO
+         ACESSO DIRETO — SEM E-MAIL E SEM SENHA
     ========================================================== -->
 
-    <section id="appScreen" class="app-screen hidden">
+    <section
+        id="appScreen"
+        class="app-screen"
+    >
 
-        <!-- MENU LATERAL -->
 
-        <aside id="sidebar" class="sidebar">
+        <!-- =====================================================
+             MENU LATERAL
+        ====================================================== -->
+
+        <aside
+            id="sidebar"
+            class="sidebar"
+        >
+
 
             <div class="sidebar-logo">
 
@@ -109,8 +62,15 @@
                 </div>
 
                 <div>
-                    <strong>GRID-X</strong>
-                    <span>CONTROL</span>
+
+                    <strong>
+                        GRID-X
+                    </strong>
+
+                    <span>
+                        CONTROL
+                    </span>
+
                 </div>
 
             </div>
@@ -118,12 +78,20 @@
 
             <nav class="menu">
 
+
                 <button
                     class="menu-item active"
                     data-section="dashboard"
                 >
-                    <span class="menu-icon">⌂</span>
-                    <span>Dashboard</span>
+
+                    <span class="menu-icon">
+                        ⌂
+                    </span>
+
+                    <span>
+                        Dashboard
+                    </span>
+
                 </button>
 
 
@@ -131,8 +99,15 @@
                     class="menu-item"
                     data-section="motores"
                 >
-                    <span class="menu-icon">⚙</span>
-                    <span>Motores</span>
+
+                    <span class="menu-icon">
+                        ⚙
+                    </span>
+
+                    <span>
+                        Motores
+                    </span>
+
                 </button>
 
 
@@ -140,8 +115,15 @@
                     class="menu-item"
                     data-section="ordens"
                 >
-                    <span class="menu-icon">☷</span>
-                    <span>Ordens de Serviço</span>
+
+                    <span class="menu-icon">
+                        ☷
+                    </span>
+
+                    <span>
+                        Ordens de Serviço
+                    </span>
+
                 </button>
 
 
@@ -149,8 +131,15 @@
                     class="menu-item"
                     data-section="checklists"
                 >
-                    <span class="menu-icon">✓</span>
-                    <span>Checklists</span>
+
+                    <span class="menu-icon">
+                        ✓
+                    </span>
+
+                    <span>
+                        Checklists
+                    </span>
+
                 </button>
 
 
@@ -158,8 +147,15 @@
                     class="menu-item"
                     data-section="usuarios"
                 >
-                    <span class="menu-icon">♙</span>
-                    <span>Usuários</span>
+
+                    <span class="menu-icon">
+                        ♙
+                    </span>
+
+                    <span>
+                        Usuários
+                    </span>
+
                 </button>
 
 
@@ -167,39 +163,58 @@
                     class="menu-item"
                     data-section="perfil"
                 >
-                    <span class="menu-icon">●</span>
-                    <span>Meu Perfil</span>
+
+                    <span class="menu-icon">
+                        ●
+                    </span>
+
+                    <span>
+                        Meu Perfil
+                    </span>
+
                 </button>
+
 
             </nav>
 
 
             <div class="sidebar-bottom">
 
+
                 <div class="system-status">
+
                     <span class="status-dot"></span>
+
                     Sistema online
+
                 </div>
 
-                <button
-                    id="logoutButton"
-                    class="logout-button"
-                >
-                    ⇥ Sair
-                </button>
+
+                <!--
+                    Não existe mais botão de sair,
+                    pois não existe login.
+                -->
+
 
             </div>
+
 
         </aside>
 
 
-        <!-- CONTEÚDO PRINCIPAL -->
+        <!-- =====================================================
+             CONTEÚDO PRINCIPAL
+        ====================================================== -->
 
         <main class="main-content">
 
-            <!-- CABEÇALHO -->
+
+            <!-- =================================================
+                 CABEÇALHO
+            ================================================== -->
 
             <header class="topbar">
+
 
                 <button
                     id="mobileMenuButton"
@@ -207,6 +222,7 @@
                 >
                     ☰
                 </button>
+
 
                 <div class="topbar-title">
 
@@ -223,23 +239,30 @@
 
                 <div class="user-area">
 
-                    <div class="user-avatar" id="userAvatar">
-                        U
+
+                    <div
+                        class="user-avatar"
+                        id="userAvatar"
+                    >
+                        G
                     </div>
+
 
                     <div class="user-info">
 
                         <strong id="userName">
-                            Usuário
+                            Operador GRID-X
                         </strong>
 
                         <span id="userEmail">
-                            —
+                            Acesso direto
                         </span>
 
                     </div>
 
+
                 </div>
+
 
             </header>
 
@@ -253,17 +276,22 @@
                 class="page-section active-section"
             >
 
+
                 <div class="welcome-card">
 
+
                     <div>
+
 
                         <span class="welcome-label">
                             BEM-VINDO AO GRID-X CONTROL
                         </span>
 
+
                         <h2>
                             Controle inteligente da manutenção
                         </h2>
+
 
                         <p>
                             Gerencie equipamentos, motores,
@@ -271,16 +299,20 @@
                             em um único sistema.
                         </p>
 
+
                     </div>
+
 
                     <div class="welcome-icon">
                         GX
                     </div>
 
+
                 </div>
 
 
                 <div class="stats-grid">
+
 
                     <div class="stat-card">
 
@@ -289,10 +321,15 @@
                         </div>
 
                         <div>
-                            <span>Equipamentos</span>
+
+                            <span>
+                                Equipamentos
+                            </span>
+
                             <strong id="motorCount">
                                 0
                             </strong>
+
                         </div>
 
                     </div>
@@ -305,10 +342,15 @@
                         </div>
 
                         <div>
-                            <span>OS abertas</span>
+
+                            <span>
+                                OS abertas
+                            </span>
+
                             <strong id="osCount">
                                 0
                             </strong>
+
                         </div>
 
                     </div>
@@ -321,10 +363,15 @@
                         </div>
 
                         <div>
-                            <span>Checklists</span>
+
+                            <span>
+                                Checklists
+                            </span>
+
                             <strong id="checklistCount">
                                 0
                             </strong>
+
                         </div>
 
                     </div>
@@ -337,38 +384,55 @@
                         </div>
 
                         <div>
-                            <span>Usuário</span>
+
+                            <span>
+                                Usuário
+                            </span>
+
                             <strong id="profileStatus">
                                 Ativo
                             </strong>
+
                         </div>
 
                     </div>
+
 
                 </div>
 
 
                 <div class="dashboard-grid">
 
+
                     <div class="panel">
+
 
                         <div class="panel-header">
 
+
                             <div>
-                                <h3>Status do sistema</h3>
+
+                                <h3>
+                                    Status do sistema
+                                </h3>
+
                                 <span>
-                                    Conexões e autenticação
+                                    Conexão do sistema
                                 </span>
+
                             </div>
+
 
                             <span class="online-badge">
                                 ONLINE
                             </span>
 
+
                         </div>
 
 
                         <div class="status-list">
+
 
                             <div class="status-row">
 
@@ -389,14 +453,14 @@
                             <div class="status-row">
 
                                 <span>
-                                    Autenticação
+                                    Acesso
                                 </span>
 
                                 <strong
                                     id="authStatus"
                                     class="status-ok"
                                 >
-                                    Verificada
+                                    Direto
                                 </strong>
 
                             </div>
@@ -405,69 +469,113 @@
                             <div class="status-row">
 
                                 <span>
-                                    Sessão
+                                    Sistema
                                 </span>
 
                                 <strong
                                     id="sessionStatus"
                                     class="status-ok"
                                 >
-                                    Ativa
+                                    Ativo
                                 </strong>
 
                             </div>
 
+
                         </div>
+
 
                     </div>
 
 
                     <div class="panel">
 
+
                         <div class="panel-header">
 
+
                             <div>
-                                <h3>Próximos módulos</h3>
+
+                                <h3>
+                                    Próximos módulos
+                                </h3>
+
                                 <span>
                                     Estrutura preparada
                                 </span>
+
                             </div>
+
 
                         </div>
 
 
                         <div class="module-list">
 
+
                             <div class="module-item">
-                                <span>⚙</span>
+
+                                <span>
+                                    ⚙
+                                </span>
+
                                 Cadastro de motores
+
                             </div>
 
+
                             <div class="module-item">
-                                <span>▣</span>
+
+                                <span>
+                                    ▣
+                                </span>
+
                                 QR Codes
+
                             </div>
 
+
                             <div class="module-item">
-                                <span>🔧</span>
+
+                                <span>
+                                    🔧
+                                </span>
+
                                 Manutenção
+
                             </div>
 
+
                             <div class="module-item">
-                                <span>📋</span>
+
+                                <span>
+                                    📋
+                                </span>
+
                                 Checklists
+
                             </div>
 
+
                             <div class="module-item">
-                                <span>📊</span>
+
+                                <span>
+                                    📊
+                                </span>
+
                                 Relatórios
+
                             </div>
+
 
                         </div>
 
+
                     </div>
 
+
                 </div>
+
 
             </section>
 
@@ -481,33 +589,44 @@
                 class="page-section"
             >
 
+
                 <div class="section-header">
 
+
                     <div>
-                        <h2>Equipamentos e motores</h2>
+
+                        <h2>
+                            Equipamentos e motores
+                        </h2>
 
                         <p>
                             Cadastro e gerenciamento dos
                             equipamentos da empresa.
                         </p>
+
                     </div>
+
 
                     <button class="btn-primary">
                         + Novo motor
                     </button>
+
 
                 </div>
 
 
                 <div class="empty-state">
 
+
                     <div class="empty-icon">
                         ⚙
                     </div>
 
+
                     <h3>
                         Módulo de motores
                     </h3>
+
 
                     <p>
                         A estrutura do sistema está preparada.
@@ -515,7 +634,9 @@
                         40 motores ao banco de dados.
                     </p>
 
+
                 </div>
+
 
             </section>
 
@@ -529,39 +650,52 @@
                 class="page-section"
             >
 
+
                 <div class="section-header">
 
+
                     <div>
-                        <h2>Ordens de Serviço</h2>
+
+                        <h2>
+                            Ordens de Serviço
+                        </h2>
 
                         <p>
                             Controle das atividades de manutenção.
                         </p>
+
                     </div>
+
 
                     <button class="btn-primary">
                         + Nova OS
                     </button>
+
 
                 </div>
 
 
                 <div class="empty-state">
 
+
                     <div class="empty-icon">
                         ☷
                     </div>
 
+
                     <h3>
                         Ordens de Serviço
                     </h3>
+
 
                     <p>
                         Este módulo será conectado ao Supabase
                         nas próximas etapas.
                     </p>
 
+
                 </div>
+
 
             </section>
 
@@ -575,39 +709,52 @@
                 class="page-section"
             >
 
+
                 <div class="section-header">
 
+
                     <div>
-                        <h2>Checklists</h2>
+
+                        <h2>
+                            Checklists
+                        </h2>
 
                         <p>
                             Controle das inspeções e rotinas.
                         </p>
+
                     </div>
+
 
                     <button class="btn-primary">
                         + Novo checklist
                     </button>
+
 
                 </div>
 
 
                 <div class="empty-state">
 
+
                     <div class="empty-icon">
                         ✓
                     </div>
 
+
                     <h3>
                         Checklists
                     </h3>
+
 
                     <p>
                         O sistema será preparado para os
                         checklists da manutenção.
                     </p>
 
+
                 </div>
+
 
             </section>
 
@@ -621,29 +768,39 @@
                 class="page-section"
             >
 
+
                 <div class="section-header">
 
+
                     <div>
-                        <h2>Usuários</h2>
+
+                        <h2>
+                            Usuários
+                        </h2>
 
                         <p>
                             Controle dos usuários autorizados
                             a utilizar o sistema.
                         </p>
+
                     </div>
+
 
                 </div>
 
 
                 <div class="empty-state">
 
+
                     <div class="empty-icon">
                         ♙
                     </div>
 
+
                     <h3>
                         Gerenciamento de usuários
                     </h3>
+
 
                     <p>
                         O gerenciamento avançado de perfis
@@ -651,7 +808,9 @@
                         etapas.
                     </p>
 
+
                 </div>
+
 
             </section>
 
@@ -665,35 +824,48 @@
                 class="page-section"
             >
 
+
                 <div class="section-header">
 
+
                     <div>
-                        <h2>Meu Perfil</h2>
+
+                        <h2>
+                            Meu Perfil
+                        </h2>
 
                         <p>
-                            Informações da sua conta.
+                            Informações do acesso ao sistema.
                         </p>
+
                     </div>
+
 
                 </div>
 
 
                 <div class="profile-card">
 
-                    <div class="profile-avatar-large"
-                         id="profileAvatar">
-                        U
+
+                    <div
+                        class="profile-avatar-large"
+                        id="profileAvatar"
+                    >
+                        G
                     </div>
 
 
                     <div class="profile-details">
 
+
                         <div class="profile-field">
 
-                            <span>Nome</span>
+                            <span>
+                                Nome
+                            </span>
 
                             <strong id="profileName">
-                                —
+                                Operador GRID-X
                             </strong>
 
                         </div>
@@ -701,10 +873,12 @@
 
                         <div class="profile-field">
 
-                            <span>E-mail</span>
+                            <span>
+                                Acesso
+                            </span>
 
                             <strong id="profileEmail">
-                                —
+                                Acesso direto
                             </strong>
 
                         </div>
@@ -712,13 +886,15 @@
 
                         <div class="profile-field">
 
-                            <span>ID do usuário</span>
+                            <span>
+                                ID
+                            </span>
 
                             <strong
                                 id="profileId"
                                 class="small-text"
                             >
-                                —
+                                grid-x-local
                             </strong>
 
                         </div>
@@ -726,78 +902,40 @@
 
                         <div class="profile-field">
 
-                            <span>Status</span>
+                            <span>
+                                Status
+                            </span>
 
                             <strong class="status-ok">
-                                Conta ativa
+                                Sistema ativo
                             </strong>
 
                         </div>
 
+
                     </div>
+
 
                 </div>
 
+
             </section>
 
+
         </main>
+
 
     </section>
 
 
     <!-- =========================================================
-         MODAL DE RECUPERAÇÃO DE SENHA
+         JAVASCRIPT PRINCIPAL
     ========================================================== -->
-
-    <div
-        id="passwordModal"
-        class="modal hidden"
-    >
-
-        <div class="modal-card">
-
-            <button
-                id="closeModal"
-                class="modal-close"
-            >
-                ×
-            </button>
-
-            <h2>
-                Recuperar senha
-            </h2>
-
-            <p>
-                Informe seu e-mail para receber o
-                link de recuperação.
-            </p>
-
-            <input
-                type="email"
-                id="recoveryEmail"
-                placeholder="seu@email.com"
-            >
-
-            <button
-                id="sendRecovery"
-                class="btn-primary"
-            >
-                Enviar recuperação
-            </button>
-
-            <div
-                id="recoveryMessage"
-                class="message"
-            ></div>
-
-        </div>
-
-    </div>
-
-
-    <!-- JAVASCRIPT PRINCIPAL -->
 
     <script src="app.js"></script>
 
+
 </body>
+
 </html>
+```
