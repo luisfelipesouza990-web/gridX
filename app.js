@@ -2,12 +2,12 @@
 /* ============================================================
    GRID-X CONTROL
    APP.JS
-   Plataforma GRID-X
+   VERSÃO CORRIGIDA — NAVEGAÇÃO FORÇADA
    ============================================================ */
 
 
 /* ============================================================
-   CONFIGURAÇÃO SUPABASE
+   SUPABASE
    ============================================================ */
 
 const SUPABASE_URL =
@@ -21,47 +21,42 @@ let supabaseClient = null;
 
 
 /* ============================================================
-   INICIALIZAÇÃO
+   INICIAR SISTEMA
    ============================================================ */
 
 document.addEventListener(
     "DOMContentLoaded",
-    iniciarAplicacao
+    function () {
+
+        console.log(
+            "GRID-X CONTROL carregando..."
+        );
+
+
+        iniciarSupabase();
+
+        prepararMenu();
+
+        prepararMenuMobile();
+
+        abrirSecao("dashboard");
+
+        carregarDados();
+
+
+        console.log(
+            "GRID-X CONTROL pronto."
+        );
+
+    }
 );
 
 
-async function iniciarAplicacao() {
-
-    console.log(
-        "GRID-X CONTROL iniciando..."
-    );
-
-
-    inicializarSupabase();
-
-    inicializarMenu();
-
-    inicializarMenuMobile();
-
-    atualizarCabecalho(
-        "dashboard"
-    );
-
-    await carregarDados();
-
-
-    console.log(
-        "GRID-X CONTROL iniciado com sucesso."
-    );
-
-}
-
-
 /* ============================================================
-   CONEXÃO SUPABASE
+   SUPABASE
    ============================================================ */
 
-function inicializarSupabase() {
+function iniciarSupabase() {
 
     try {
 
@@ -71,11 +66,7 @@ function inicializarSupabase() {
         ) {
 
             console.error(
-                "Biblioteca Supabase não encontrada."
-            );
-
-            atualizarStatusSupabase(
-                false
+                "Supabase JS não carregado."
             );
 
             return;
@@ -90,9 +81,26 @@ function inicializarSupabase() {
             );
 
 
-        atualizarStatusSupabase(
-            true
-        );
+        const status =
+            document.getElementById(
+                "supabaseStatus"
+            );
+
+
+        if (status) {
+
+            status.textContent =
+                "Conectado";
+
+            status.classList.remove(
+                "status-error"
+            );
+
+            status.classList.add(
+                "status-ok"
+            );
+
+        }
 
 
         console.log(
@@ -103,12 +111,8 @@ function inicializarSupabase() {
     } catch (erro) {
 
         console.error(
-            "Erro ao conectar ao Supabase:",
+            "Erro no Supabase:",
             erro
-        );
-
-        atualizarStatusSupabase(
-            false
         );
 
     }
@@ -117,60 +121,61 @@ function inicializarSupabase() {
 
 
 /* ============================================================
-   MENU
+   PREPARAR MENU
    ============================================================ */
 
-function inicializarMenu() {
+function prepararMenu() {
 
-    const menuItems =
+    const botoes =
         document.querySelectorAll(
             ".menu-item"
         );
 
 
     console.log(
-        "Menus encontrados:",
-        menuItems.length
+        "Quantidade de botões encontrados:",
+        botoes.length
     );
 
 
-    menuItems.forEach(
-        item => {
+    botoes.forEach(
+        function (botao) {
 
-            item.addEventListener(
+            botao.addEventListener(
                 "click",
                 function (evento) {
 
                     evento.preventDefault();
 
+                    evento.stopPropagation();
+
+
                     const secao =
-                        this.dataset.section;
-
-
-                    if (!secao) {
-
-                        console.warn(
-                            "Menu sem data-section."
+                        botao.getAttribute(
+                            "data-section"
                         );
 
-                        return;
 
-                    }
-
-
-                    abrirSecao(
+                    console.log(
+                        "Clique no menu:",
                         secao
                     );
+
+
+                    if (
+                        secao
+                    ) {
+
+                        abrirSecao(
+                            secao
+                        );
+
+                    }
 
                 }
             );
 
         }
-    );
-
-
-    abrirSecao(
-        "dashboard"
     );
 
 }
@@ -181,53 +186,62 @@ function inicializarMenu() {
    ============================================================ */
 
 function abrirSecao(
-    nomeSecao
+    nome
 ) {
 
     console.log(
-        "Abrindo:",
-        nomeSecao
+        "Abrindo seção:",
+        nome
     );
 
 
-    /*
-       Esconde todas as seções
-    */
+    /* --------------------------------------------------------
+       TODAS AS SEÇÕES
+    -------------------------------------------------------- */
 
-    const sections =
+    const secoes =
         document.querySelectorAll(
             ".page-section"
         );
 
 
-    sections.forEach(
-        section => {
+    secoes.forEach(
+        function (secao) {
 
-            section.classList.remove(
+            secao.classList.remove(
                 "active-section"
             );
 
-            section.style.display =
-                "none";
+
+            /*
+               Usa !important para vencer
+               qualquer regra do CSS.
+            */
+
+            secao.style.setProperty(
+                "display",
+                "none",
+                "important"
+            );
 
         }
     );
 
 
-    /*
-       Remove o ativo dos menus
-    */
+    /* --------------------------------------------------------
+       TODOS OS BOTÕES
+    -------------------------------------------------------- */
 
-    const menus =
+    const botoes =
         document.querySelectorAll(
             ".menu-item"
         );
 
 
-    menus.forEach(
-        menu => {
+    botoes.forEach(
+        function (botao) {
 
-            menu.classList.remove(
+            botao.classList.remove(
                 "active"
             );
 
@@ -235,21 +249,21 @@ function abrirSecao(
     );
 
 
-    /*
-       Localiza a seção escolhida
-    */
+    /* --------------------------------------------------------
+       ENCONTRAR SEÇÃO
+    -------------------------------------------------------- */
 
     const secao =
         document.getElementById(
-            nomeSecao + "Section"
+            nome + "Section"
         );
 
 
     if (!secao) {
 
         console.error(
-            "Seção não encontrada:",
-            nomeSecao + "Section"
+            "ERRO: seção não encontrada:",
+            nome + "Section"
         );
 
         return;
@@ -257,62 +271,62 @@ function abrirSecao(
     }
 
 
-    /*
-       Mostra a seção
-    */
-
-    secao.style.display =
-        "block";
+    /* --------------------------------------------------------
+       MOSTRAR SEÇÃO
+    -------------------------------------------------------- */
 
     secao.classList.add(
         "active-section"
     );
 
 
-    /*
-       Ativa o botão
-    */
+    secao.style.setProperty(
+        "display",
+        "block",
+        "important"
+    );
 
-    const menuAtivo =
+
+    /* --------------------------------------------------------
+       ATIVAR BOTÃO
+    -------------------------------------------------------- */
+
+    const botaoAtivo =
         document.querySelector(
-            `.menu-item[data-section="${nomeSecao}"]`
+            '.menu-item[data-section="' +
+            nome +
+            '"]'
         );
 
 
-    if (menuAtivo) {
+    if (botaoAtivo) {
 
-        menuAtivo.classList.add(
+        botaoAtivo.classList.add(
             "active"
         );
 
     }
 
 
-    /*
-       Atualiza título
-    */
+    /* --------------------------------------------------------
+       ATUALIZAR CABEÇALHO
+    -------------------------------------------------------- */
 
     atualizarCabecalho(
-        nomeSecao
+        nome
     );
 
 
-    /*
-       Fecha menu mobile
-    */
+    /* --------------------------------------------------------
+       FECHAR MENU MOBILE
+    -------------------------------------------------------- */
 
     fecharMenuMobile();
 
 
-    /*
-       Volta ao topo
-    */
-
-    window.scrollTo(
-        {
-            top: 0,
-            behavior: "smooth"
-        }
+    console.log(
+        "Seção aberta com sucesso:",
+        nome
     );
 
 }
@@ -324,139 +338,74 @@ function abrirSecao(
 
 const paginas = {
 
-    dashboard: {
+    dashboard: [
+        "Dashboard",
+        "Visão geral do ecossistema GRID-X"
+    ],
 
-        titulo:
-            "Dashboard",
+    ai: [
+        "GRID-X AI",
+        "Inteligência artificial e análise energética"
+    ],
 
-        subtitulo:
-            "Visão geral do ecossistema GRID-X"
+    energia: [
+        "Energia",
+        "Monitoramento da geração, consumo e eficiência"
+    ],
 
-    },
+    ativos: [
+        "Ativos Energéticos",
+        "Gestão dos ativos do ecossistema GRID-X"
+    ],
 
+    mercado: [
+        "Mercado de Energia",
+        "Gestão do mercado digital de energia"
+    ],
 
-    ai: {
+    v2g: [
+        "V2G",
+        "Integração entre veículos elétricos e rede"
+    ],
 
-        titulo:
-            "GRID-X AI",
+    sustentabilidade: [
+        "Sustentabilidade",
+        "Indicadores ambientais, sociais e de governança"
+    ],
 
-        subtitulo:
-            "Inteligência artificial e análise energética"
+    projetos: [
+        "Projetos & Inovação",
+        "Pesquisa, desenvolvimento e novas tecnologias"
+    ],
 
-    },
+    relatorios: [
+        "Relatórios",
+        "Indicadores e informações estratégicas"
+    ],
 
+    usuarios: [
+        "Usuários",
+        "Gerenciamento dos usuários da plataforma"
+    ],
 
-    energia: {
-
-        titulo:
-            "Energia",
-
-        subtitulo:
-            "Monitoramento da geração, consumo e eficiência"
-
-    },
-
-
-    ativos: {
-
-        titulo:
-            "Ativos Energéticos",
-
-        subtitulo:
-            "Gestão dos ativos do ecossistema GRID-X"
-
-    },
-
-
-    mercado: {
-
-        titulo:
-            "Mercado de Energia",
-
-        subtitulo:
-            "Gestão do mercado digital de energia"
-
-    },
-
-
-    v2g: {
-
-        titulo:
-            "V2G",
-
-        subtitulo:
-            "Integração entre veículos elétricos e rede"
-
-    },
-
-
-    sustentabilidade: {
-
-        titulo:
-            "Sustentabilidade",
-
-        subtitulo:
-            "Indicadores ambientais, sociais e de governança"
-
-    },
-
-
-    projetos: {
-
-        titulo:
-            "Projetos & Inovação",
-
-        subtitulo:
-            "Pesquisa, desenvolvimento e novas tecnologias"
-
-    },
-
-
-    relatorios: {
-
-        titulo:
-            "Relatórios",
-
-        subtitulo:
-            "Indicadores e informações estratégicas"
-
-    },
-
-
-    usuarios: {
-
-        titulo:
-            "Usuários",
-
-        subtitulo:
-            "Gerenciamento dos usuários da plataforma"
-
-    },
-
-
-    perfil: {
-
-        titulo:
-            "Meu Perfil",
-
-        subtitulo:
-            "Informações do acesso à plataforma"
-
-    }
+    perfil: [
+        "Meu Perfil",
+        "Informações do acesso à plataforma"
+    ]
 
 };
 
 
 /* ============================================================
-   ATUALIZAR CABEÇALHO
+   CABEÇALHO
    ============================================================ */
 
 function atualizarCabecalho(
-    nomeSecao
+    nome
 ) {
 
     const pagina =
-        paginas[nomeSecao];
+        paginas[nome];
 
 
     if (!pagina) {
@@ -481,7 +430,7 @@ function atualizarCabecalho(
     if (titulo) {
 
         titulo.textContent =
-            pagina.titulo;
+            pagina[0];
 
     }
 
@@ -489,7 +438,7 @@ function atualizarCabecalho(
     if (subtitulo) {
 
         subtitulo.textContent =
-            pagina.subtitulo;
+            pagina[1];
 
     }
 
@@ -500,7 +449,7 @@ function atualizarCabecalho(
    MENU MOBILE
    ============================================================ */
 
-function inicializarMenuMobile() {
+function prepararMenuMobile() {
 
     const botao =
         document.getElementById(
@@ -514,7 +463,10 @@ function inicializarMenuMobile() {
         );
 
 
-    if (!botao || !sidebar) {
+    if (
+        !botao ||
+        !sidebar
+    ) {
 
         return;
 
@@ -547,65 +499,10 @@ function fecharMenuMobile() {
         );
 
 
-    if (!sidebar) {
+    if (sidebar) {
 
-        return;
-
-    }
-
-
-    sidebar.classList.remove(
-        "mobile-open"
-    );
-
-}
-
-
-/* ============================================================
-   STATUS SUPABASE
-   ============================================================ */
-
-function atualizarStatusSupabase(
-    conectado
-) {
-
-    const elemento =
-        document.getElementById(
-            "supabaseStatus"
-        );
-
-
-    if (!elemento) {
-
-        return;
-
-    }
-
-
-    if (conectado) {
-
-        elemento.textContent =
-            "Conectado";
-
-        elemento.classList.remove(
-            "status-error"
-        );
-
-        elemento.classList.add(
-            "status-ok"
-        );
-
-    } else {
-
-        elemento.textContent =
-            "Erro de conexão";
-
-        elemento.classList.remove(
-            "status-ok"
-        );
-
-        elemento.classList.add(
-            "status-error"
+        sidebar.classList.remove(
+            "mobile-open"
         );
 
     }
@@ -619,38 +516,52 @@ function atualizarStatusSupabase(
 
 async function carregarDados() {
 
-    if (!supabaseClient) {
+    if (
+        !supabaseClient
+    ) {
+
+        console.log(
+            "Supabase indisponível. Sistema funcionando em modo local."
+        );
 
         return;
 
     }
 
 
-    await carregarAtivos();
+    try {
 
-    await carregarAI();
+        await carregarAtivos();
 
-    await carregarEnergia();
+        await carregarAI();
 
-    await carregarV2G();
+        await carregarEnergia();
 
-    await carregarESG();
+        await carregarV2G();
+
+        await carregarESG();
+
+    } catch (erro) {
+
+        console.error(
+            "Erro ao carregar dados:",
+            erro
+        );
+
+    }
 
 }
 
 
 /* ============================================================
-   ATIVOS ENERGÉTICOS
+   ATIVOS
    ============================================================ */
 
 async function carregarAtivos() {
 
     try {
 
-        const {
-            data,
-            error
-        } =
+        const resultado =
             await supabaseClient
                 .from(
                     "ativos_energeticos"
@@ -658,11 +569,13 @@ async function carregarAtivos() {
                 .select("*");
 
 
-        if (error) {
+        if (
+            resultado.error
+        ) {
 
             console.warn(
                 "Ativos:",
-                error.message
+                resultado.error.message
             );
 
             return;
@@ -671,15 +584,15 @@ async function carregarAtivos() {
 
 
         console.log(
-            "Ativos carregados:",
-            data?.length || 0
+            "Ativos:",
+            resultado.data?.length || 0
         );
 
 
     } catch (erro) {
 
-        console.error(
-            "Erro nos ativos:",
+        console.warn(
+            "Erro ativos:",
             erro
         );
 
@@ -696,10 +609,7 @@ async function carregarAI() {
 
     try {
 
-        const {
-            data,
-            error
-        } =
+        const resultado =
             await supabaseClient
                 .from(
                     "ai_predictions"
@@ -707,11 +617,13 @@ async function carregarAI() {
                 .select("*");
 
 
-        if (error) {
+        if (
+            resultado.error
+        ) {
 
             console.warn(
-                "GRID-X AI:",
-                error.message
+                "AI:",
+                resultado.error.message
             );
 
             return;
@@ -719,40 +631,47 @@ async function carregarAI() {
         }
 
 
-        const registros =
-            data || [];
+        const dados =
+            resultado.data || [];
 
 
         atualizarElemento(
             "predictionCount",
-            registros.length
+            dados.length
         );
 
 
-        const anomalias =
-            registros.filter(
-                item => {
-
-                    const tipo =
-                        String(
-                            item.type ||
-                            item.prediction_type ||
-                            item.tipo ||
-                            ""
-                        ).toLowerCase();
+        let anomalias =
+            0;
 
 
-                    return (
-                        tipo.includes(
-                            "anomaly"
-                        ) ||
-                        tipo.includes(
-                            "anomalia"
-                        )
-                    );
+        dados.forEach(
+            function (item) {
+
+                const tipo =
+                    String(
+                        item.type ||
+                        item.prediction_type ||
+                        item.tipo ||
+                        ""
+                    ).toLowerCase();
+
+
+                if (
+                    tipo.includes(
+                        "anomaly"
+                    ) ||
+                    tipo.includes(
+                        "anomalia"
+                    )
+                ) {
+
+                    anomalias++;
 
                 }
-            ).length;
+
+            }
+        );
 
 
         atualizarElemento(
@@ -761,16 +680,10 @@ async function carregarAI() {
         );
 
 
-        console.log(
-            "Previsões IA:",
-            registros.length
-        );
-
-
     } catch (erro) {
 
-        console.error(
-            "Erro GRID-X AI:",
+        console.warn(
+            "Erro AI:",
             erro
         );
 
@@ -787,10 +700,7 @@ async function carregarEnergia() {
 
     try {
 
-        const {
-            data,
-            error
-        } =
+        const resultado =
             await supabaseClient
                 .from(
                     "geracao_energia"
@@ -798,11 +708,13 @@ async function carregarEnergia() {
                 .select("*");
 
 
-        if (error) {
+        if (
+            resultado.error
+        ) {
 
             console.warn(
-                "Geração de energia:",
-                error.message
+                "Energia:",
+                resultado.error.message
             );
 
             return;
@@ -810,16 +722,16 @@ async function carregarEnergia() {
         }
 
 
-        const registros =
-            data || [];
+        const dados =
+            resultado.data || [];
 
 
         let total =
             0;
 
 
-        registros.forEach(
-            item => {
+        dados.forEach(
+            function (item) {
 
                 const valor =
                     Number(
@@ -854,15 +766,9 @@ async function carregarEnergia() {
         );
 
 
-        console.log(
-            "Energia gerada:",
-            total
-        );
-
-
     } catch (erro) {
 
-        console.error(
+        console.warn(
             "Erro energia:",
             erro
         );
@@ -880,10 +786,7 @@ async function carregarV2G() {
 
     try {
 
-        const {
-            data,
-            error
-        } =
+        const resultado =
             await supabaseClient
                 .from(
                     "v2g"
@@ -891,11 +794,13 @@ async function carregarV2G() {
                 .select("*");
 
 
-        if (error) {
+        if (
+            resultado.error
+        ) {
 
             console.warn(
                 "V2G:",
-                error.message
+                resultado.error.message
             );
 
             return;
@@ -904,14 +809,14 @@ async function carregarV2G() {
 
 
         console.log(
-            "Registros V2G:",
-            data?.length || 0
+            "V2G registros:",
+            resultado.data?.length || 0
         );
 
 
     } catch (erro) {
 
-        console.error(
+        console.warn(
             "Erro V2G:",
             erro
         );
@@ -929,10 +834,7 @@ async function carregarESG() {
 
     try {
 
-        const {
-            data,
-            error
-        } =
+        const resultado =
             await supabaseClient
                 .from(
                     "indicadores_esg"
@@ -940,11 +842,13 @@ async function carregarESG() {
                 .select("*");
 
 
-        if (error) {
+        if (
+            resultado.error
+        ) {
 
             console.warn(
                 "ESG:",
-                error.message
+                resultado.error.message
             );
 
             return;
@@ -952,22 +856,22 @@ async function carregarESG() {
         }
 
 
-        const registros =
-            data || [];
+        const dados =
+            resultado.data || [];
 
 
         let co2 =
             0;
 
 
-        registros.forEach(
-            item => {
+        dados.forEach(
+            function (item) {
 
                 const valor =
                     Number(
                         item.co2_avoided ??
                         item.co2_evitado ??
-                        item.co2_avoitado ??
+                        item.co2_avoidado ??
                         item.valor_co2 ??
                         0
                     );
@@ -995,15 +899,9 @@ async function carregarESG() {
         );
 
 
-        console.log(
-            "CO2 evitado:",
-            co2
-        );
-
-
     } catch (erro) {
 
-        console.error(
+        console.warn(
             "Erro ESG:",
             erro
         );
@@ -1028,15 +926,12 @@ function atualizarElemento(
         );
 
 
-    if (!elemento) {
+    if (elemento) {
 
-        return;
+        elemento.textContent =
+            valor;
 
     }
-
-
-    elemento.textContent =
-        valor;
 
 }
 
@@ -1063,40 +958,17 @@ function formatarNumero(
 
 
 /* ============================================================
-   ATUALIZAÇÃO DO SISTEMA
-   ============================================================ */
-
-function atualizarSistema() {
-
-    const elemento =
-        document.getElementById(
-            "systemStatus"
-        );
-
-
-    if (elemento) {
-
-        elemento.textContent =
-            "Operacional";
-
-    }
-
-}
-
-
-/* ============================================================
    ATUALIZAÇÃO AUTOMÁTICA
    ============================================================ */
 
 setInterval(
-    async function () {
+    function () {
 
-        atualizarSistema();
+        if (
+            supabaseClient
+        ) {
 
-
-        if (supabaseClient) {
-
-            await carregarDados();
+            carregarDados();
 
         }
 
@@ -1115,27 +987,12 @@ window.GRIDX = {
         abrirSecao,
 
     carregarDados:
-        carregarDados,
-
-    carregarAtivos:
-        carregarAtivos,
-
-    carregarAI:
-        carregarAI,
-
-    carregarEnergia:
-        carregarEnergia,
-
-    carregarV2G:
-        carregarV2G,
-
-    carregarESG:
-        carregarESG
+        carregarDados
 
 };
 
 
 /* ============================================================
-   FIM
+   FIM DO APP.JS
    ============================================================ */
 ```
