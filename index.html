@@ -16,6 +16,11 @@
         content="#111827"
     >
 
+    <meta
+        name="description"
+        content="GRID-X CONTROL — Plataforma inteligente de energia, tecnologia e sustentabilidade."
+    >
+
     <title>GRID-X CONTROL</title>
 
     <link
@@ -24,26 +29,22 @@
     >
 
     <!-- Supabase -->
-    <script
-        src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 </head>
 
 
 <body>
 
-
     <!-- =========================================================
-         APLICAÇÃO
-         ACESSO DIRETO — SEM E-MAIL E SEM SENHA
+         GRID-X CONTROL
+         Plataforma tecnológica do ecossistema GRID-X
     ========================================================== -->
 
     <section
         id="appScreen"
         class="app-screen"
     >
-
 
         <!-- =====================================================
              MENU LATERAL
@@ -54,6 +55,7 @@
             class="sidebar"
         >
 
+            <!-- LOGO -->
 
             <div class="sidebar-logo">
 
@@ -76,8 +78,9 @@
             </div>
 
 
-            <nav class="menu">
+            <!-- MENU -->
 
+            <nav class="menu">
 
                 <button
                     class="menu-item active"
@@ -97,15 +100,15 @@
 
                 <button
                     class="menu-item"
-                    data-section="motores"
+                    data-section="ai"
                 >
 
                     <span class="menu-icon">
-                        ⚙
+                        ◈
                     </span>
 
                     <span>
-                        Motores
+                        GRID-X AI
                     </span>
 
                 </button>
@@ -113,15 +116,15 @@
 
                 <button
                     class="menu-item"
-                    data-section="ordens"
+                    data-section="energia"
                 >
 
                     <span class="menu-icon">
-                        ☷
+                        ⚡
                     </span>
 
                     <span>
-                        Ordens de Serviço
+                        Energia
                     </span>
 
                 </button>
@@ -129,15 +132,95 @@
 
                 <button
                     class="menu-item"
-                    data-section="checklists"
+                    data-section="ativos"
                 >
 
                     <span class="menu-icon">
-                        ✓
+                        ◫
                     </span>
 
                     <span>
-                        Checklists
+                        Ativos Energéticos
+                    </span>
+
+                </button>
+
+
+                <button
+                    class="menu-item"
+                    data-section="mercado"
+                >
+
+                    <span class="menu-icon">
+                        ◇
+                    </span>
+
+                    <span>
+                        Mercado de Energia
+                    </span>
+
+                </button>
+
+
+                <button
+                    class="menu-item"
+                    data-section="v2g"
+                >
+
+                    <span class="menu-icon">
+                        ⇄
+                    </span>
+
+                    <span>
+                        V2G
+                    </span>
+
+                </button>
+
+
+                <button
+                    class="menu-item"
+                    data-section="sustentabilidade"
+                >
+
+                    <span class="menu-icon">
+                        ♧
+                    </span>
+
+                    <span>
+                        Sustentabilidade
+                    </span>
+
+                </button>
+
+
+                <button
+                    class="menu-item"
+                    data-section="projetos"
+                >
+
+                    <span class="menu-icon">
+                        ✦
+                    </span>
+
+                    <span>
+                        Projetos & Inovação
+                    </span>
+
+                </button>
+
+
+                <button
+                    class="menu-item"
+                    data-section="relatorios"
+                >
+
+                    <span class="menu-icon">
+                        ▤
+                    </span>
+
+                    <span>
+                        Relatórios
                     </span>
 
                 </button>
@@ -174,12 +257,12 @@
 
                 </button>
 
-
             </nav>
 
 
-            <div class="sidebar-bottom">
+            <!-- STATUS -->
 
+            <div class="sidebar-bottom">
 
                 <div class="system-status">
 
@@ -189,15 +272,7 @@
 
                 </div>
 
-
-                <!--
-                    Não existe mais botão de sair,
-                    pois não existe login.
-                -->
-
-
             </div>
-
 
         </aside>
 
@@ -210,15 +285,15 @@
 
 
             <!-- =================================================
-                 CABEÇALHO
+                 TOPBAR
             ================================================== -->
 
             <header class="topbar">
 
-
                 <button
                     id="mobileMenuButton"
                     class="mobile-menu-button"
+                    aria-label="Abrir menu"
                 >
                     ☰
                 </button>
@@ -231,14 +306,13 @@
                     </h1>
 
                     <p id="pageSubtitle">
-                        Visão geral do sistema
+                        Visão geral do ecossistema GRID-X
                     </p>
 
                 </div>
 
 
                 <div class="user-area">
-
 
                     <div
                         class="user-avatar"
@@ -260,9 +334,7 @@
 
                     </div>
 
-
                 </div>
-
 
             </header>
 
@@ -277,28 +349,25 @@
             >
 
 
-                <div class="welcome-card">
+                <!-- BOAS-VINDAS -->
 
+                <div class="welcome-card">
 
                     <div>
 
-
                         <span class="welcome-label">
-                            BEM-VINDO AO GRID-X CONTROL
+                            ECOSSISTEMA GRID-X
                         </span>
 
-
                         <h2>
-                            Controle inteligente da manutenção
+                            Inteligência que conecta energia, tecnologia e sustentabilidade.
                         </h2>
 
-
                         <p>
-                            Gerencie equipamentos, motores,
-                            ordens de serviço e checklists
-                            em um único sistema.
+                            Central de controle para monitoramento
+                            energético, inteligência artificial,
+                            inovação e sustentabilidade.
                         </p>
-
 
                     </div>
 
@@ -307,9 +376,10 @@
                         GX
                     </div>
 
-
                 </div>
 
+
+                <!-- INDICADORES -->
 
                 <div class="stats-grid">
 
@@ -317,17 +387,17 @@
                     <div class="stat-card">
 
                         <div class="stat-icon">
-                            ⚙
+                            ⚡
                         </div>
 
                         <div>
 
                             <span>
-                                Equipamentos
+                                Energia gerada
                             </span>
 
-                            <strong id="motorCount">
-                                0
+                            <strong id="energyGenerated">
+                                0 kWh
                             </strong>
 
                         </div>
@@ -338,17 +408,17 @@
                     <div class="stat-card">
 
                         <div class="stat-icon">
-                            ☷
+                            ◉
                         </div>
 
                         <div>
 
                             <span>
-                                OS abertas
+                                Energia armazenada
                             </span>
 
-                            <strong id="osCount">
-                                0
+                            <strong id="energyStored">
+                                0 kWh
                             </strong>
 
                         </div>
@@ -359,17 +429,17 @@
                     <div class="stat-card">
 
                         <div class="stat-icon">
-                            ✓
+                            ♧
                         </div>
 
                         <div>
 
                             <span>
-                                Checklists
+                                CO₂ evitado
                             </span>
 
-                            <strong id="checklistCount">
-                                0
+                            <strong id="co2Avoided">
+                                0 kg
                             </strong>
 
                         </div>
@@ -380,17 +450,17 @@
                     <div class="stat-card">
 
                         <div class="stat-icon">
-                            ♙
+                            ◈
                         </div>
 
                         <div>
 
                             <span>
-                                Usuário
+                                IA ativa
                             </span>
 
-                            <strong id="profileStatus">
-                                Ativo
+                            <strong id="aiStatus">
+                                Online
                             </strong>
 
                         </div>
@@ -401,32 +471,32 @@
                 </div>
 
 
+                <!-- GRID PRINCIPAL -->
+
                 <div class="dashboard-grid">
 
 
+                    <!-- STATUS ENERGÉTICO -->
+
                     <div class="panel">
 
-
                         <div class="panel-header">
-
 
                             <div>
 
                                 <h3>
-                                    Status do sistema
+                                    Panorama energético
                                 </h3>
 
                                 <span>
-                                    Conexão do sistema
+                                    Indicadores do sistema
                                 </span>
 
                             </div>
 
-
                             <span class="online-badge">
-                                ONLINE
+                                MONITORANDO
                             </span>
-
 
                         </div>
 
@@ -437,14 +507,14 @@
                             <div class="status-row">
 
                                 <span>
-                                    Supabase
+                                    Geração
                                 </span>
 
                                 <strong
-                                    id="supabaseStatus"
+                                    id="generationStatus"
                                     class="status-ok"
                                 >
-                                    Conectado
+                                    Normal
                                 </strong>
 
                             </div>
@@ -453,14 +523,30 @@
                             <div class="status-row">
 
                                 <span>
-                                    Acesso
+                                    Consumo
                                 </span>
 
                                 <strong
-                                    id="authStatus"
+                                    id="consumptionStatus"
                                     class="status-ok"
                                 >
-                                    Direto
+                                    Normal
+                                </strong>
+
+                            </div>
+
+
+                            <div class="status-row">
+
+                                <span>
+                                    Armazenamento
+                                </span>
+
+                                <strong
+                                    id="storageStatus"
+                                    class="status-ok"
+                                >
+                                    Disponível
                                 </strong>
 
                             </div>
@@ -473,39 +559,36 @@
                                 </span>
 
                                 <strong
-                                    id="sessionStatus"
+                                    id="systemStatus"
                                     class="status-ok"
                                 >
-                                    Ativo
+                                    Operacional
                                 </strong>
 
                             </div>
 
-
                         </div>
-
 
                     </div>
 
 
+                    <!-- GRID-X AI -->
+
                     <div class="panel">
 
-
                         <div class="panel-header">
-
 
                             <div>
 
                                 <h3>
-                                    Próximos módulos
+                                    GRID-X AI
                                 </h3>
 
                                 <span>
-                                    Estrutura preparada
+                                    Inteligência e previsão
                                 </span>
 
                             </div>
-
 
                         </div>
 
@@ -516,10 +599,10 @@
                             <div class="module-item">
 
                                 <span>
-                                    ⚙
+                                    ◈
                                 </span>
 
-                                Cadastro de motores
+                                Previsão de geração
 
                             </div>
 
@@ -527,10 +610,10 @@
                             <div class="module-item">
 
                                 <span>
-                                    ▣
+                                    ◇
                                 </span>
 
-                                QR Codes
+                                Análise de demanda
 
                             </div>
 
@@ -538,10 +621,10 @@
                             <div class="module-item">
 
                                 <span>
-                                    🔧
+                                    ≋
                                 </span>
 
-                                Manutenção
+                                Detecção de anomalias
 
                             </div>
 
@@ -549,30 +632,100 @@
                             <div class="module-item">
 
                                 <span>
-                                    📋
+                                    ↗
                                 </span>
 
-                                Checklists
-
-                            </div>
-
-
-                            <div class="module-item">
-
-                                <span>
-                                    📊
-                                </span>
-
-                                Relatórios
+                                Otimização energética
 
                             </div>
 
 
                         </div>
 
+                    </div>
+
+                </div>
+
+
+                <!-- PROJETOS -->
+
+                <div class="panel">
+
+                    <div class="panel-header">
+
+                        <div>
+
+                            <h3>
+                                Frentes estratégicas
+                            </h3>
+
+                            <span>
+                                Projetos do ecossistema GRID-X
+                            </span>
+
+                        </div>
 
                     </div>
 
+
+                    <div class="module-list">
+
+
+                        <div class="module-item">
+
+                            <span>
+                                ☀
+                            </span>
+
+                            Agrivoltaica
+
+                        </div>
+
+
+                        <div class="module-item">
+
+                            <span>
+                                H₂
+                            </span>
+
+                            Hidrogênio Verde
+
+                        </div>
+
+
+                        <div class="module-item">
+
+                            <span>
+                                ⇄
+                            </span>
+
+                            Vehicle-to-Grid — V2G
+
+                        </div>
+
+
+                        <div class="module-item">
+
+                            <span>
+                                ⚡
+                            </span>
+
+                            Mercado Digital de Energia
+
+                        </div>
+
+
+                        <div class="module-item">
+
+                            <span>
+                                ✦
+                            </span>
+
+                            Pesquisa e Desenvolvimento
+
+                        </div>
+
+                    </div>
 
                 </div>
 
@@ -581,180 +734,764 @@
 
 
             <!-- =================================================
-                 MOTORES
+                 GRID-X AI
             ================================================== -->
 
             <section
-                id="motoresSection"
+                id="aiSection"
                 class="page-section"
             >
 
-
                 <div class="section-header">
-
 
                     <div>
 
                         <h2>
-                            Equipamentos e motores
+                            GRID-X AI
                         </h2>
 
                         <p>
-                            Cadastro e gerenciamento dos
-                            equipamentos da empresa.
+                            Inteligência artificial aplicada à análise
+                            e otimização energética.
                         </p>
 
                     </div>
 
-
                     <button class="btn-primary">
-                        + Novo motor
+                        + Nova análise
                     </button>
 
+                </div>
+
+
+                <div class="stats-grid">
+
+
+                    <div class="stat-card">
+
+                        <div class="stat-icon">
+                            ◈
+                        </div>
+
+                        <div>
+
+                            <span>
+                                Previsões
+                            </span>
+
+                            <strong id="predictionCount">
+                                0
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <div class="stat-icon">
+                            ≋
+                        </div>
+
+                        <div>
+
+                            <span>
+                                Anomalias
+                            </span>
+
+                            <strong id="anomalyCount">
+                                0
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <div class="stat-icon">
+                            ↗
+                        </div>
+
+                        <div>
+
+                            <span>
+                                Otimizações
+                            </span>
+
+                            <strong>
+                                0
+                            </strong>
+
+                        </div>
+
+                    </div>
 
                 </div>
 
 
                 <div class="empty-state">
 
-
                     <div class="empty-icon">
-                        ⚙
+                        ◈
                     </div>
 
-
                     <h3>
-                        Módulo de motores
+                        Central de Inteligência GRID-X
                     </h3>
 
-
                     <p>
-                        A estrutura do sistema está preparada.
-                        O próximo passo será conectar os
-                        40 motores ao banco de dados.
+                        Esta área será conectada às previsões,
+                        análises e modelos de inteligência artificial
+                        armazenados no Supabase.
                     </p>
 
-
                 </div>
-
 
             </section>
 
 
             <!-- =================================================
-                 ORDENS
+                 ENERGIA
             ================================================== -->
 
             <section
-                id="ordensSection"
+                id="energiaSection"
                 class="page-section"
             >
 
-
                 <div class="section-header">
-
 
                     <div>
 
                         <h2>
-                            Ordens de Serviço
+                            Gestão de Energia
                         </h2>
 
                         <p>
-                            Controle das atividades de manutenção.
+                            Monitoramento da geração, consumo,
+                            armazenamento e eficiência energética.
                         </p>
 
                     </div>
 
+                </div>
 
-                    <button class="btn-primary">
-                        + Nova OS
-                    </button>
 
+                <div class="stats-grid">
+
+
+                    <div class="stat-card">
+
+                        <div class="stat-icon">
+                            ⚡
+                        </div>
+
+                        <div>
+
+                            <span>
+                                Geração
+                            </span>
+
+                            <strong>
+                                0 kWh
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <div class="stat-icon">
+                            ↓
+                        </div>
+
+                        <div>
+
+                            <span>
+                                Consumo
+                            </span>
+
+                            <strong>
+                                0 kWh
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <div class="stat-icon">
+                            ◉
+                        </div>
+
+                        <div>
+
+                            <span>
+                                Armazenamento
+                            </span>
+
+                            <strong>
+                                0 kWh
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <div class="stat-icon">
+                            %
+                        </div>
+
+                        <div>
+
+                            <span>
+                                Eficiência
+                            </span>
+
+                            <strong>
+                                0%
+                            </strong>
+
+                        </div>
+
+                    </div>
 
                 </div>
 
 
                 <div class="empty-state">
 
-
                     <div class="empty-icon">
-                        ☷
+                        ⚡
                     </div>
 
-
                     <h3>
-                        Ordens de Serviço
+                        Monitoramento energético
                     </h3>
 
-
                     <p>
-                        Este módulo será conectado ao Supabase
-                        nas próximas etapas.
+                        Os dados de geração, consumo e armazenamento
+                        serão apresentados nesta área conforme os
+                        sistemas forem conectados ao banco de dados.
                     </p>
 
-
                 </div>
-
 
             </section>
 
 
             <!-- =================================================
-                 CHECKLISTS
+                 ATIVOS ENERGÉTICOS
             ================================================== -->
 
             <section
-                id="checklistsSection"
+                id="ativosSection"
                 class="page-section"
             >
 
-
                 <div class="section-header">
-
 
                     <div>
 
                         <h2>
-                            Checklists
+                            Ativos Energéticos
                         </h2>
 
                         <p>
-                            Controle das inspeções e rotinas.
+                            Cadastro e acompanhamento dos ativos
+                            que fazem parte do ecossistema GRID-X.
                         </p>
 
                     </div>
 
-
                     <button class="btn-primary">
-                        + Novo checklist
+                        + Novo ativo
                     </button>
-
 
                 </div>
 
 
                 <div class="empty-state">
 
-
                     <div class="empty-icon">
-                        ✓
+                        ◫
                     </div>
 
-
                     <h3>
-                        Checklists
+                        Ativos energéticos
                     </h3>
 
-
                     <p>
-                        O sistema será preparado para os
-                        checklists da manutenção.
+                        Painéis solares, sistemas de armazenamento,
+                        unidades de geração e outros ativos poderão
+                        ser cadastrados e monitorados aqui.
                     </p>
-
 
                 </div>
 
+            </section>
+
+
+            <!-- =================================================
+                 MERCADO DE ENERGIA
+            ================================================== -->
+
+            <section
+                id="mercadoSection"
+                class="page-section"
+            >
+
+                <div class="section-header">
+
+                    <div>
+
+                        <h2>
+                            Mercado Digital de Energia
+                        </h2>
+
+                        <p>
+                            Plataforma para gestão e visualização
+                            das operações relacionadas à energia.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="empty-state">
+
+                    <div class="empty-icon">
+                        ◇
+                    </div>
+
+                    <h3>
+                        Mercado Digital
+                    </h3>
+
+                    <p>
+                        Este módulo representa a frente de mercado
+                        de energia prevista no ecossistema GRID-X.
+                    </p>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 V2G
+            ================================================== -->
+
+            <section
+                id="v2gSection"
+                class="page-section"
+            >
+
+                <div class="section-header">
+
+                    <div>
+
+                        <h2>
+                            Vehicle-to-Grid — V2G
+                        </h2>
+
+                        <p>
+                            Integração entre veículos elétricos,
+                            armazenamento e rede elétrica.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="stats-grid">
+
+
+                    <div class="stat-card">
+
+                        <div class="stat-icon">
+                            🚗
+                        </div>
+
+                        <div>
+
+                            <span>
+                                Veículos conectados
+                            </span>
+
+                            <strong>
+                                0
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <div class="stat-icon">
+                            ⚡
+                        </div>
+
+                        <div>
+
+                            <span>
+                                Energia disponível
+                            </span>
+
+                            <strong>
+                                0 kWh
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <div class="stat-icon">
+                            ⇄
+                        </div>
+
+                        <div>
+
+                            <span>
+                                Fluxo energético
+                            </span>
+
+                            <strong>
+                                0 kWh
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="empty-state">
+
+                    <div class="empty-icon">
+                        ⇄
+                    </div>
+
+                    <h3>
+                        Plataforma V2G
+                    </h3>
+
+                    <p>
+                        Área preparada para integração e
+                        monitoramento de veículos elétricos
+                        conectados à rede.
+                    </p>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 SUSTENTABILIDADE
+            ================================================== -->
+
+            <section
+                id="sustentabilidadeSection"
+                class="page-section"
+            >
+
+                <div class="section-header">
+
+                    <div>
+
+                        <h2>
+                            Sustentabilidade & ESG
+                        </h2>
+
+                        <p>
+                            Indicadores ambientais e de sustentabilidade
+                            do ecossistema GRID-X.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="stats-grid">
+
+
+                    <div class="stat-card">
+
+                        <div class="stat-icon">
+                            ♧
+                        </div>
+
+                        <div>
+
+                            <span>
+                                CO₂ evitado
+                            </span>
+
+                            <strong>
+                                0 kg
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <div class="stat-icon">
+                            ☀
+                        </div>
+
+                        <div>
+
+                            <span>
+                                Energia renovável
+                            </span>
+
+                            <strong>
+                                0 kWh
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <div class="stat-icon">
+                            %
+                        </div>
+
+                        <div>
+
+                            <span>
+                                Índice ESG
+                            </span>
+
+                            <strong>
+                                0%
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="empty-state">
+
+                    <div class="empty-icon">
+                        ♧
+                    </div>
+
+                    <h3>
+                        Indicadores de sustentabilidade
+                    </h3>
+
+                    <p>
+                        Os indicadores ambientais, sociais e de
+                        governança poderão ser acompanhados nesta área.
+                    </p>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 PROJETOS & INOVAÇÃO
+            ================================================== -->
+
+            <section
+                id="projetosSection"
+                class="page-section"
+            >
+
+                <div class="section-header">
+
+                    <div>
+
+                        <h2>
+                            Projetos & Inovação
+                        </h2>
+
+                        <p>
+                            Pesquisa, desenvolvimento e novas
+                            soluções tecnológicas da GRID-X.
+                        </p>
+
+                    </div>
+
+                    <button class="btn-primary">
+                        + Novo projeto
+                    </button>
+
+                </div>
+
+
+                <div class="dashboard-grid">
+
+
+                    <div class="panel">
+
+                        <div class="panel-header">
+
+                            <div>
+
+                                <h3>
+                                    Frentes de inovação
+                                </h3>
+
+                                <span>
+                                    Projetos estratégicos
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="module-list">
+
+                            <div class="module-item">
+                                <span>☀</span>
+                                Agrivoltaica
+                            </div>
+
+                            <div class="module-item">
+                                <span>H₂</span>
+                                Hidrogênio Verde
+                            </div>
+
+                            <div class="module-item">
+                                <span>⇄</span>
+                                V2G
+                            </div>
+
+                            <div class="module-item">
+                                <span>✦</span>
+                                P&D e Inovação
+                            </div>
+
+                            <div class="module-item">
+                                <span>◈</span>
+                                GRID-X AI
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="panel">
+
+                        <div class="panel-header">
+
+                            <div>
+
+                                <h3>
+                                    Nexa Skin
+                                </h3>
+
+                                <span>
+                                    Projeto do ecossistema GRID-X
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="empty-state compact">
+
+                            <div class="empty-icon">
+                                ✦
+                            </div>
+
+                            <p>
+                                Espaço destinado à apresentação,
+                                acompanhamento e evolução do projeto.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 RELATÓRIOS
+            ================================================== -->
+
+            <section
+                id="relatoriosSection"
+                class="page-section"
+            >
+
+                <div class="section-header">
+
+                    <div>
+
+                        <h2>
+                            Relatórios
+                        </h2>
+
+                        <p>
+                            Indicadores estratégicos e relatórios
+                            do ecossistema GRID-X.
+                        </p>
+
+                    </div>
+
+                    <button class="btn-primary">
+                        + Gerar relatório
+                    </button>
+
+                </div>
+
+
+                <div class="empty-state">
+
+                    <div class="empty-icon">
+                        ▤
+                    </div>
+
+                    <h3>
+                        Central de relatórios
+                    </h3>
+
+                    <p>
+                        Os relatórios de energia, sustentabilidade,
+                        inteligência artificial, projetos e indicadores
+                        estratégicos serão disponibilizados aqui.
+                    </p>
+
+                </div>
 
             </section>
 
@@ -768,9 +1505,7 @@
                 class="page-section"
             >
 
-
                 <div class="section-header">
-
 
                     <div>
 
@@ -779,38 +1514,34 @@
                         </h2>
 
                         <p>
-                            Controle dos usuários autorizados
-                            a utilizar o sistema.
+                            Gestão dos usuários da plataforma GRID-X.
                         </p>
 
                     </div>
 
+                    <button class="btn-primary">
+                        + Novo usuário
+                    </button>
 
                 </div>
 
 
                 <div class="empty-state">
 
-
                     <div class="empty-icon">
                         ♙
                     </div>
-
 
                     <h3>
                         Gerenciamento de usuários
                     </h3>
 
-
                     <p>
-                        O gerenciamento avançado de perfis
-                        será conectado ao banco nas próximas
-                        etapas.
+                        O gerenciamento de usuários, permissões
+                        e níveis de acesso será conectado ao Supabase.
                     </p>
 
-
                 </div>
-
 
             </section>
 
@@ -824,9 +1555,7 @@
                 class="page-section"
             >
 
-
                 <div class="section-header">
-
 
                     <div>
 
@@ -835,11 +1564,10 @@
                         </h2>
 
                         <p>
-                            Informações do acesso ao sistema.
+                            Informações do acesso à plataforma GRID-X.
                         </p>
 
                     </div>
-
 
                 </div>
 
@@ -903,6 +1631,19 @@
                         <div class="profile-field">
 
                             <span>
+                                Plataforma
+                            </span>
+
+                            <strong class="status-ok">
+                                GRID-X CONTROL
+                            </strong>
+
+                        </div>
+
+
+                        <div class="profile-field">
+
+                            <span>
                                 Status
                             </span>
 
@@ -915,25 +1656,22 @@
 
                     </div>
 
-
                 </div>
-
 
             </section>
 
 
         </main>
 
-
     </section>
 
 
     <!-- =========================================================
          JAVASCRIPT PRINCIPAL
+         A lógica continuará no app.js
     ========================================================== -->
 
     <script src="app.js"></script>
-
 
 </body>
 
